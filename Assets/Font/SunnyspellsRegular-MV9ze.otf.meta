@@ -1,0 +1,22 @@
+fileFormatVersion: 2
+guid: 19277af5015569e43819f9d090a2479c
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontNames:
+  - Sunny Spells
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: 164effe2fc18bd74b89108723b08817c, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  shouldRoundAdvanceValue: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
