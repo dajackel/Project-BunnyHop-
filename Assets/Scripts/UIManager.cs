@@ -17,8 +17,8 @@ public class UIManager : MonoBehaviour
     [SerializeField] Button LeftButton,RightButton,ChargeButton,AudioButton;
     [SerializeField] AudioMixer masterMixer;
     private float maxVol;
-    private bool isAudioOn;
-    [SerializeField] Sprite AudioOn, AudioOff;
+    private bool isAudioOn, LOn=false,ROn=false,COn = false;
+    [SerializeField] Sprite AudioOn, AudioOff, PressedButtonSprite;
 
     //private TextMeshProUGUI tmpInput;
     //private string playerStats;
@@ -29,7 +29,6 @@ public class UIManager : MonoBehaviour
     {
         cam = Camera.main;
         pScript=Player.GetComponent<PlayerScript>();
-       //tmpInput = PauseMenu.GetComponentInChildren<TextMeshProUGUI>();
     }
     private string timeConversion(float time){
         string convertedTime="";
@@ -143,7 +142,52 @@ public class UIManager : MonoBehaviour
     }
     public void exitHeldButton(Button button)
     {
-        button.GetComponent<Image>().color = Color.white;
+        button.GetComponent<Image>().overrideSprite = null;
+    }
+    public void setButtonDown(Button button)
+    {
+        switch (button.name)
+        {
+            case "LeftButton":
+                LOn = !LOn;
+                break;
+            case "RightButton":
+                ROn = !ROn;
+                break;
+            case "ChargeButton":
+                COn = !COn;
+                break;
+        }
+    }
+    public void enterHeldButton(Button button)
+    {
+        switch (button.name)
+        {
+            case "LeftButton":
+                if (LOn)
+                {
+                    pScript.setMoveDir(1);
+                    button.GetComponent<Image>().overrideSprite = PressedButtonSprite;
+                }
+                break;
+            case "RightButton":
+                if (ROn)
+                {
+                    pScript.setMoveDir(2);
+                    button.GetComponent<Image>().overrideSprite = PressedButtonSprite;
+                }
+                    break;
+            case "ChargeButton":
+                if (COn)
+                {
+                    pScript.startChargeJump();
+                    button.GetComponent<Image>().overrideSprite = PressedButtonSprite;
+                }
+                break;
+
+            default:
+                break;
+        }
     }
     public void colorPressedButton(Button button)
     {
