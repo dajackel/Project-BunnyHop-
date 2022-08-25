@@ -976,7 +976,7 @@ MonoBehaviour:
           m_CallState: 2
         - m_Target: {fileID: 346358361}
           m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
-          m_MethodName: exitHeldButton
+          m_MethodName: setButtonDown
           m_Mode: 2
           m_Arguments:
             m_ObjectArgument: {fileID: 257071183}
@@ -988,7 +988,7 @@ MonoBehaviour:
           m_CallState: 2
         - m_Target: {fileID: 346358361}
           m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
-          m_MethodName: setButtonDown
+          m_MethodName: exitHeldButton
           m_Mode: 2
           m_Arguments:
             m_ObjectArgument: {fileID: 257071183}
