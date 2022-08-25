@@ -147,8 +147,7 @@ public class PlayerScript : MonoBehaviour
             { //no charge / lvl 0
                 rigidbody.velocity = new Vector2(rigidbody.velocity.x, jumpHeight); print("level 0");
             }
-            charging = false;
-            grounded = false;
+            charging = grounded = false;
             movePlayerX();
             chargetime = 0;
     }

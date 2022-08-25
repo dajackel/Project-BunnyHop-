@@ -84,7 +84,7 @@ public class UIManager : MonoBehaviour
         var camsettings = cam.GetComponent<CameraScript>();
         playerstats.totalbounces = PlayerPrefs.GetInt("Bounces");
         playerstats.totaljumps = PlayerPrefs.GetInt("Jumps");
-        //gotta do one for play time
+        pScript.elapsedtime = PlayerPrefs.GetFloat("Time");
 
         cam.transform.position = new Vector2(PlayerPrefs.GetFloat("cameraXPos"), PlayerPrefs.GetFloat("cameraYPos"));
         camsettings.maxXDist = PlayerPrefs.GetFloat("cameraMaxXPos");
@@ -118,6 +118,7 @@ public class UIManager : MonoBehaviour
         PlayerPrefs.SetFloat("playerYPos", playerstats.lastsafepos.y);
         PlayerPrefs.SetInt("Bounces", playerstats.totalbounces);
         PlayerPrefs.SetInt("Jumps", playerstats.totaljumps);
+        PlayerPrefs.SetFloat("Time", pScript.elapsedtime);
 
         PlayerPrefs.SetFloat("cameraXPos", cam.transform.position.x);
         PlayerPrefs.SetFloat("cameraYPos", cam.transform.position.y);
@@ -126,7 +127,7 @@ public class UIManager : MonoBehaviour
         PlayerPrefs.SetFloat("cameraMinYPos", camsettings.minYDist);
         PlayerPrefs.SetFloat("cameraMinXPos", camsettings.minXDist);
 
-        PlayerPrefs.SetInt("playerSkin", 0);
+        //PlayerPrefs.SetInt("playerSkin", 0);
 
         PlayerPrefs.Save();
     }
@@ -189,19 +190,13 @@ public class UIManager : MonoBehaviour
                 break;
         }
     }
-    public void colorPressedButton(Button button)
-    {
-        button.GetComponent<Image>().color = Color.green;
-    }
     public void ToggleAudio()
     {
         isAudioOn = !isAudioOn;
         float vol;
         masterMixer.GetFloat("MasterVolume", out vol);
         masterMixer.SetFloat("MasterVolume", (vol== -80.0f) ? 0.0f : -80.0f);
-        if (isAudioOn) 
-            AudioButton.image.sprite = AudioOff;
-        else
-            AudioButton.image.sprite = AudioOn;
+
+        AudioButton.image.sprite = (isAudioOn) ? AudioOff : AudioOn;
     }
 }
