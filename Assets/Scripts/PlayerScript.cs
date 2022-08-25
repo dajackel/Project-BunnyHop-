@@ -56,24 +56,23 @@ public class PlayerScript : MonoBehaviour
             chargetime += Time.deltaTime;
 
             if (!particle.isEmitting)
-            {
                 particle.Play();
-            }
         }//count charge time and start particles
 
+
+        #region FLIP PLAYER SPRITE
+        if (Input.GetKey(KeyCode.A) && spriteRenderer.flipX || movedir == 1 && spriteRenderer.flipX)
+            spriteRenderer.flipX = !spriteRenderer.flipX;
+
+        else if (Input.GetKey(KeyCode.D) && !spriteRenderer.flipX || movedir == 2 && !spriteRenderer.flipX)
+            spriteRenderer.flipX = !spriteRenderer.flipX;
+        #endregion
 
         #region KEYBOARD MOVEMENT
         if (Input.GetKeyDown(KeyCode.Space)){//stop bounce start charging
             StopCoroutine(landed());
             charging = true;
         }
-        #region FLIP PLAYER SPRITE
-        if (Input.GetKey(KeyCode.A) && spriteRenderer.flipX|| movedir==1 && spriteRenderer.flipX)
-            spriteRenderer.flipX = !spriteRenderer.flipX;
-
-        else if (Input.GetKey(KeyCode.D) && !spriteRenderer.flipX || movedir == 2 && !spriteRenderer.flipX)
-            spriteRenderer.flipX = !spriteRenderer.flipX;
-        #endregion
 
         if (Input.GetKeyUp(KeyCode.Space)&&charging &&grounded)
             chargeJump();
@@ -121,7 +120,7 @@ public class PlayerScript : MonoBehaviour
     }
     public void chargeJump()
     {
-        if (!grounded)
+        if (!grounded||!charging)
         {
             charging = false;
             return;
@@ -160,6 +159,7 @@ public class PlayerScript : MonoBehaviour
     public void stopChargeJump(){
             charging = false;
             particle.Stop(false, ParticleSystemStopBehavior.StopEmitting);
+            chargetime = 0.0f;
             if(grounded)
                 StartCoroutine(landed());
     }
