@@ -88,6 +88,9 @@ public class PlayerScript : MonoBehaviour
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        Vector3 plat = collision.transform.position,
+                player = transform.position;
+        print(Vector3.Dot(plat,player));
         if (collision.gameObject.tag == "Ground")
         {
             rigidbody.velocity = Vector2.zero;
