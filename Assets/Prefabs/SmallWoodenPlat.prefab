@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 6160899273150085933}
   - component: {fileID: 4968879334156572405}
   - component: {fileID: 295673915564377640}
-  - component: {fileID: 7301312515697306058}
+  - component: {fileID: 7219566842617998593}
   m_Layer: 0
   m_Name: SmallWoodenPlat
   m_TagString: Platform
@@ -74,7 +74,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 454265237
-  m_SortingLayer: 2
+  m_SortingLayer: 5
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300054, guid: 261212b977f594d5dbc48631a5c1295c, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -100,7 +100,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.07926464, y: 0.04411296}
+  m_Offset: {x: -0.07926464, y: 0.04423683}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -111,10 +111,10 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.3185293, y: 0.06845047}
+  m_Size: {x: 0.3185293, y: 0.06869821}
   m_EdgeRadius: 0
---- !u!61 &7301312515697306058
-BoxCollider2D:
+--- !u!68 &7219566842617998593
+EdgeCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -126,19 +126,15 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.07871987, y: 0.0685542}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 0.16, y: 0.16}
-    newSize: {x: 0.16, y: 0.16}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 0.30872333, y: 0.030169081}
+  m_Offset: {x: 0, y: 0.1}
   m_EdgeRadius: 0
+  m_Points:
+  - {x: -0.23847154, y: -0.019996963}
+  - {x: 0.08002729, y: -0.01997386}
+  m_AdjacentStartPoint: {x: 0, y: 0}
+  m_AdjacentEndPoint: {x: 0, y: 0}
+  m_UseAdjacentStartPoint: 0
+  m_UseAdjacentEndPoint: 0
 --- !u!1 &3941391152316267638
 GameObject:
   m_ObjectHideFlags: 0
@@ -210,8 +206,8 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 454265237
-  m_SortingLayer: 2
-  m_SortingOrder: 0
+  m_SortingLayer: 5
+  m_SortingOrder: 4
   m_Sprite: {fileID: 21300056, guid: 261212b977f594d5dbc48631a5c1295c, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
