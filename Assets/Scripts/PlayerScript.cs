@@ -88,11 +88,7 @@ public class PlayerScript : MonoBehaviour
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        Vector3 plat = collision.transform.position,
-                player = transform.position;
-        print(Vector3.Dot(plat,player));
-        if (collision.gameObject.tag == "Ground")
-        {
+        if (transform.position.y-1.5f > collision.transform.position.y) { 
             rigidbody.velocity = Vector2.zero;
             grounded = true;
             if (!charging)

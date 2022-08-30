@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 6160899273150085933}
   - component: {fileID: 4968879334156572405}
   - component: {fileID: 295673915564377640}
-  - component: {fileID: 7219566842617998593}
   m_Layer: 0
   m_Name: SmallWoodenPlat
   m_TagString: Platform
@@ -113,28 +112,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.3185293, y: 0.06869821}
   m_EdgeRadius: 0
---- !u!68 &7219566842617998593
-EdgeCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2009661183516691610}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0.1}
-  m_EdgeRadius: 0
-  m_Points:
-  - {x: -0.23847154, y: -0.019996963}
-  - {x: 0.08002729, y: -0.01997386}
-  m_AdjacentStartPoint: {x: 0, y: 0}
-  m_AdjacentEndPoint: {x: 0, y: 0}
-  m_UseAdjacentStartPoint: 0
-  m_UseAdjacentEndPoint: 0
 --- !u!1 &3941391152316267638
 GameObject:
   m_ObjectHideFlags: 0

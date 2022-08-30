@@ -7706,6 +7706,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SmallWoodenPlat
       objectReference: {fileID: 0}
+    - target: {fileID: 4968879334156572405, guid: 0dbbb705af546764b90cb6ec37cb02a5, type: 3}
+      propertyPath: m_SpriteSortPoint
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6160899273150085933, guid: 0dbbb705af546764b90cb6ec37cb02a5, type: 3}
       propertyPath: m_RootOrder
       value: 5
@@ -7792,6 +7796,10 @@ PrefabInstance:
       propertyPath: bounceSFX
       value: 
       objectReference: {fileID: 8300000, guid: 0c73b46213b3aee48a7d1e219026a910, type: 3}
+    - target: {fileID: 8352070866440270251, guid: 354d615e3ef0f29438446dc142b63c36, type: 3}
+      propertyPath: m_Offset.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8352070866440270261, guid: 354d615e3ef0f29438446dc142b63c36, type: 3}
       propertyPath: m_Name
       value: Player
