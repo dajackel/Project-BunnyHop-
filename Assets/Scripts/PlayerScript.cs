@@ -88,11 +88,20 @@ public class PlayerScript : MonoBehaviour
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        //player can balance themselves on the corner of a platform
+        float dot = Vector2.Dot(collision.gameObject.transform.up, rigidbody.velocity);
+        print(dot);
         if (Vector2.Dot(collision.gameObject.transform.up, rigidbody.velocity) >= 0&& transform.position.y > collision.transform.position.y) { 
             rigidbody.velocity = Vector2.zero;
             grounded = true;
             if (!charging)
                 StartCoroutine(landed());
+        }
+        else
+        {
+            bool leftorright = collision.transform.position.x > transform.position.x;
+            if (leftorright) transform.position = new Vector3(transform.position.x - 0.05f, transform.position.y); 
+            else transform.position = new Vector3(transform.position.x + 0.05f, transform.position.y);
         }
         if (charging)
             animator.SetBool("Charging", true);
