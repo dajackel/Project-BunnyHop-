@@ -88,7 +88,7 @@ public class PlayerScript : MonoBehaviour
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (transform.position.y-1.5f > collision.transform.position.y) { 
+        if (Vector2.Dot(collision.gameObject.transform.up, rigidbody.velocity) >= 0&& transform.position.y > collision.transform.position.y) { 
             rigidbody.velocity = Vector2.zero;
             grounded = true;
             if (!charging)
@@ -97,18 +97,18 @@ public class PlayerScript : MonoBehaviour
         if (charging)
             animator.SetBool("Charging", true);
     }
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.gameObject.tag == "Platform")
-        {
-            rigidbody.velocity = Vector2.zero;
-            grounded = true;
-            if (!charging)
-                StartCoroutine(landed());
-        }
-        if (charging)
-            animator.SetBool("Charging", true);
-    }
+    //private void OnTriggerEnter2D(Collider2D collision)
+    //{
+    //    if (collision.gameObject.tag == "Platform")
+    //    {
+    //        rigidbody.velocity = Vector2.zero;
+    //        grounded = true;
+    //        if (!charging)
+    //            StartCoroutine(landed());
+    //    }
+    //    if (charging)
+    //        animator.SetBool("Charging", true);
+    //}
     private void movePlayerX()
     {
         if (Input.GetKey(KeyCode.A) || movedir == 1)
