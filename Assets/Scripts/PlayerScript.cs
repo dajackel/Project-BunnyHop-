@@ -15,18 +15,15 @@ public struct float2
 public class PlayerScript : MonoBehaviour
 {
     new Rigidbody2D rigidbody;
-    public float speed, bounceHeight, jumpHeight, timeScale = 1, elapsedtime = 0.0f;
-    public int totalbounces, totaljumps, movedir = 0;
-    public bool paused = false;
-    private bool grounded = false, charging = false, runTimer = true;
-    private float chargetime = 0.0f;
+    public float speed, bounceHeight, timeScale = 1;
+    public int movedir = 0;
+    private bool grounded = false, charging = false;
     private Animator animator;
     private SpriteRenderer spriteRenderer;
     [SerializeField] GameObject JumpEffect;
     private ParticleSystem particle;
     private AudioSource audioSource;
-    [SerializeField] AudioClip bounceSFX, jumpSFX;
-    public float2 lastsafepos;
+    [SerializeField] AudioClip bounceSFX;
     //extra stats
     void Start()
     {
@@ -35,31 +32,14 @@ public class PlayerScript : MonoBehaviour
         spriteRenderer = GetComponent<SpriteRenderer>();
         particle = GetComponent<ParticleSystem>();
         audioSource = GetComponent<AudioSource>();
-        InvokeRepeating("InvokeTimer", 0, 0.01f);
-    }
-    void InvokeTimer()
-    {
-        if (runTimer)
-            elapsedtime = elapsedtime + 0.01f;
-    }
-    public bool getRunTimer()
-    {
-        return runTimer;
-    }
-    public void setRunTimer(bool t)
-    {
-        runTimer = t;
     }
     // Update is called once per frame
     void Update()
     {
         if (rigidbody.velocity.y <= 0)//player is now falling
             animator.SetBool("Jumping", false);
-        if (charging && grounded)
+        if (charging && grounded&& !particle.isEmitting)
         {
-            chargetime += Time.deltaTime;
-
-            if (!particle.isEmitting)
                 particle.Play();
         }//count charge time and start particles
 
@@ -71,29 +51,21 @@ public class PlayerScript : MonoBehaviour
         else if (Input.GetKey(KeyCode.D) && !spriteRenderer.flipX || movedir == 2 && !spriteRenderer.flipX)
             spriteRenderer.flipX = !spriteRenderer.flipX;
         #endregion
-
-        #region KEYBOARD MOVEMENT
-        if (Input.GetKeyDown(KeyCode.Space))
-        {//stop bounce start charging
-            StopCoroutine(landed());
-            charging = true;
-        }
-
-        if (Input.GetKeyUp(KeyCode.Space) && charging && grounded)
-            chargeJump();
-
-        else if (Input.GetKeyUp(KeyCode.Space))//they didn't meet the requirements but stopped holding space
-            charging = false;
-        #endregion
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (Vector2.Dot(collision.gameObject.transform.up, rigidbody.velocity) >= 0&& transform.position.y > collision.transform.position.y) { 
-            rigidbody.velocity = Vector2.zero;
-            grounded = true;
-            if (!charging)
-                StartCoroutine(landed());
-        }
+        float minx = collision.collider.bounds.min.x;
+        float maxx = collision.collider.bounds.max.x;
+        float playerx= transform.position.x;
+        var pcoll = GetComponent<BoxCollider2D>();
+        if(transform.position.y>collision.transform.position.y)
+            if((playerx-0.5f*pcoll.bounds.max.x)<maxx|| (playerx + 0.5f * pcoll.bounds.max.x) < maxx)
+            {
+                rigidbody.velocity = Vector2.zero;
+                grounded = true;
+                if (!charging)
+                    StartCoroutine(landed());
+            }
         else
         {
             bool leftorright = collision.transform.position.x > transform.position.x;
@@ -110,40 +82,6 @@ public class PlayerScript : MonoBehaviour
         else if (Input.GetKey(KeyCode.D) || movedir == 2)
             rigidbody.velocity = new Vector2(speed, rigidbody.velocity.y);
     }
-    public void chargeJump()
-    {
-        if (!grounded || !charging)
-        {
-            charging = false;
-            return;
-        }
-        totaljumps++;
-        if (audioSource.clip != jumpSFX) 
-            audioSource.clip = jumpSFX;
-        audioSource.Play();
-        animator.SetBool("Charging", false); animator.SetBool("Jumping", true);
-        particle.Stop(false, ParticleSystemStopBehavior.StopEmittingAndClear);
-        Instantiate(JumpEffect, new Vector3(transform.position.x, transform.position.y - 0.3f, transform.position.z), transform.rotation);
-        if (chargetime >= 2.5f)
-        { //highest / lvl 3
-            rigidbody.velocity = new Vector2(rigidbody.velocity.x, jumpHeight * 2.0f); print("level 3");
-        }
-        else if (chargetime >= 1.5f)
-        { //sec highest / lvl 2
-            rigidbody.velocity = new Vector2(rigidbody.velocity.x, jumpHeight * 1.7f); print("level 2");
-        }
-        else if (chargetime >= 0.5f)
-        { //first charge / lvl 1
-            rigidbody.velocity = new Vector2(rigidbody.velocity.x, jumpHeight * 1.5f); print("level 1");
-        }
-        else
-        { //no charge / lvl 0
-            rigidbody.velocity = new Vector2(rigidbody.velocity.x, jumpHeight); print("level 0");
-        }
-        charging = grounded = false;
-        movePlayerX();
-        chargetime = 0;
-    }
     public void startChargeJump()
     {
         StopCoroutine(landed());
@@ -153,7 +91,6 @@ public class PlayerScript : MonoBehaviour
     {
         charging = false;
         particle.Stop(false, ParticleSystemStopBehavior.StopEmitting);
-        chargetime = 0.0f;
         if (grounded)
             StartCoroutine(landed());
     }
@@ -164,8 +101,6 @@ public class PlayerScript : MonoBehaviour
     }
     IEnumerator landed()
     {
-        totalbounces++;
-        lastsafepos = new float2(transform.position.x, transform.position.y + 0.2f);
         animator.SetBool("Charging", true);
         yield return new WaitForSeconds(0.5f);
         if (!charging && grounded)
