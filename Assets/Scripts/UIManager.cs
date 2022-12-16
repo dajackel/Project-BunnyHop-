@@ -11,9 +11,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] GameObject PauseMenu;
     [SerializeField] GameObject ConfirmWindow;
     [SerializeField] GameObject Player;
-    [SerializeField] TextMeshProUGUI BounceCountText;
-    [SerializeField] TextMeshProUGUI JumpCountText;
-    [SerializeField] Button LeftButton,RightButton,ChargeButton,AudioButton;
+    [SerializeField] Button LeftButton,RightButton,AudioButton;
     [SerializeField] AudioMixer masterMixer;
     private float maxVol;
     private bool isAudioOn;

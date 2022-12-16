@@ -15,7 +15,7 @@ public struct float2
 public class PlayerScript : MonoBehaviour
 {
     new Rigidbody2D rigidbody;
-    public float speed, bounceHeight, timeScale = 1;
+    public float speed, bounceHeight;
     public int movedir = 0;
     private bool grounded = false, charging = false;
     private Animator animator;
@@ -38,7 +38,8 @@ public class PlayerScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (rigidbody.velocity.y <= 0) { /*player is now fallinng*/
+        if (rigidbody.velocity.y <= 0)
+        { /*player is now fallinng*/
             animator.SetBool("Jumping", false);
             coll.enabled = true;
         }
@@ -52,23 +53,12 @@ public class PlayerScript : MonoBehaviour
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        float minx = collision.collider.bounds.min.x;
-        float maxx = collision.collider.bounds.max.x;
-        float playerx= transform.position.x;
-        var pcoll = GetComponent<BoxCollider2D>();
-        if(transform.position.y>collision.transform.position.y)
-            if((playerx-0.5f*pcoll.bounds.max.x)<maxx|| (playerx + 0.5f * pcoll.bounds.max.x) < maxx)
-            {
-                rigidbody.velocity = Vector2.zero;
-                grounded = true;
-                if (!charging)
-                    StartCoroutine(landed());
-            }
-        else
+        if (transform.position.y > collision.transform.position.y)
         {
-            bool leftorright = collision.transform.position.x > transform.position.x;
-            if (leftorright) transform.position = new Vector3(transform.position.x - 0.05f, transform.position.y); 
-            else transform.position = new Vector3(transform.position.x + 0.05f, transform.position.y);
+            animator.SetBool("Charging", true);
+            rigidbody.velocity = Vector2.zero;
+            StartCoroutine(landed());
+            grounded = true;
         }
     }
     private void movePlayerX()
@@ -85,19 +75,17 @@ public class PlayerScript : MonoBehaviour
     }
     IEnumerator landed()
     {
-        animator.SetBool("Charging", true);
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(1);
         if (!charging && grounded)
         {
+            //jump
+            rigidbody.velocity = new Vector2(rigidbody.velocity.x, bounceHeight);
             //change sprites
             animator.SetBool("Charging", false);
             animator.SetBool("Jumping", true);
-            //jump
-            rigidbody.velocity = new Vector2(rigidbody.velocity.x, bounceHeight);
             grounded = false;
-            coll.enabled = false;
             //play sfx
-            if (audioSource.clip != bounceSFX) 
+            if (audioSource.clip != bounceSFX)
                 audioSource.clip = bounceSFX;
             audioSource.Play();
             movePlayerX();

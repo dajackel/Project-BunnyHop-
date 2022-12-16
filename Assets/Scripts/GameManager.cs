@@ -13,7 +13,10 @@ public class GameManager : MonoBehaviour, IUnityAdsInitializationListener
     bool _testMode = true;
     private string _gameId;
     public bool paused = false;
-    // Start is called before the first frame update
+    private float timeScale = 1, currentLevelPos=0;
+    public GameObject[] levelSection;
+    private GameObject lastLevelSpawned;
+    private bool creatingLevel = false;
 
     private void Awake()
     {
@@ -110,11 +113,27 @@ public class GameManager : MonoBehaviour, IUnityAdsInitializationListener
 
         _loadBannerButton.onClick.AddListener(LoadBanner);
         _loadBannerButton.interactable = true;
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        if(!creatingLevel)
+            StartCoroutine(levelGenerator());
+    }
+
+
+    IEnumerator levelGenerator()
+    {
+        creatingLevel = true;
+        print("level gen called");
+        currentLevelPos += 25;
+        int lvlToSpawn = Random.Range(1, levelSection.Length);
+        if (lastLevelSpawned == levelSection[lvlToSpawn])
+            lvlToSpawn = (lvlToSpawn + 1)%levelSection.Length;
+        Instantiate(levelSection[lvlToSpawn],new Vector3(-1.25f,currentLevelPos,0),Quaternion.identity);
+        yield return new WaitForSecondsRealtime(5);
+        creatingLevel = false;
     }
 }

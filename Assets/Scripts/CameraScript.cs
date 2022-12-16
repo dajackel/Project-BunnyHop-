@@ -7,7 +7,7 @@ public class CameraScript : MonoBehaviour
     // Start is called before the first frame update
     [SerializeField] GameObject Player, RLevelBound, LLevelBound;
     public Vector2 curVelocity;
-    public float maxXDist, maxYDist, minXDist, minYDist;
+    private float maxXDist, minXDist, minYDist;
     private float screenWidth, screenHeight, screenRatio;
     void Start()
     {
@@ -25,7 +25,7 @@ public class CameraScript : MonoBehaviour
     void Update()
     {
         transform.position = new Vector3(Mathf.Clamp(Player.transform.position.x,minXDist,maxXDist),
-                                         Mathf.Clamp(Player.transform.position.y,minYDist,maxYDist),
+                                         Mathf.Clamp(Player.transform.position.y,minYDist, Player.transform.position.y),
                                          transform.position.z);
     }
 }

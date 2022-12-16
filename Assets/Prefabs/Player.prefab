@@ -102,8 +102,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 3
-  bounceHeight: 4
-  timeScale: 1
+  bounceHeight: 6
   movedir: 0
   JumpEffect: {fileID: 6369722323075139960, guid: 0fe9ae33ca8b24048adb734d8fc54cb1, type: 3}
   bounceSFX: {fileID: 8300000, guid: 0c73b46213b3aee48a7d1e219026a910, type: 3}
@@ -257,7 +256,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.013624102, y: -0.014713988}
+  m_Offset: {x: -0.009970278, y: -0.015931904}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -268,5 +267,5 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.24209756, y: 0.190299}
+  m_Size: {x: 0.2640205, y: 0.19273484}
   m_EdgeRadius: 0
