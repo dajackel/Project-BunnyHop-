@@ -1263,6 +1263,8 @@ MonoBehaviour:
   AudioOn: {fileID: 1087111933, guid: b9c8b8a88b05bed47ab299c58504a9d6, type: 3}
   AudioOff: {fileID: -2141816163, guid: b9c8b8a88b05bed47ab299c58504a9d6, type: 3}
   PressedButtonSprite: {fileID: 21300016, guid: 1eaee135ce037439d925cee5e41ce026, type: 3}
+  pHighScore: 0
+  pCurrHeight: 0
 --- !u!1 &381117677
 GameObject:
   m_ObjectHideFlags: 0
@@ -5305,6 +5307,7 @@ MonoBehaviour:
   - {fileID: 1131569377}
   - {fileID: 434684716}
   - {fileID: 395865458}
+  UI: {fileID: 346358361}
   player: {fileID: 832535857}
   highScore: 0
 --- !u!4 &1538434085

@@ -17,14 +17,14 @@ public class UIManager : MonoBehaviour
     private bool isAudioOn;
     [SerializeField] Sprite AudioOn, AudioOff, PressedButtonSprite;
 
-    private PlayerScript pScript;
+    public float pHighScore, pCurrHeight;
 
     private void Start()
     {
-        pScript=Player.GetComponent<PlayerScript>();
     }
     private void Update()
     {
+
     }
     public void StartGame()
     {
@@ -69,4 +69,5 @@ public class UIManager : MonoBehaviour
 
         AudioButton.image.sprite = (isAudioOn) ? AudioOff : AudioOn;
     }
+
 }

@@ -16,6 +16,7 @@ public class GameManager : MonoBehaviour//, IUnityAdsInitializationListener
     private float timeScale = 1, currentLevelPos = 0;
     public GameObject[] levelSection;
     private GameObject lastLevelSpawned;
+    [SerializeField] UIManager UI;
     private bool creatingLevel = false;
 
     //add opposite to display pretty numbers as highscore
@@ -27,9 +28,9 @@ public class GameManager : MonoBehaviour//, IUnityAdsInitializationListener
 
     private void Awake()
     {
-        adUnitId = (Application.platform == RuntimePlatform.IPhonePlayer)
-           ? iosBannerUnit
-           : androidBannerUnit;
+        //adUnitId = (Application.platform == RuntimePlatform.IPhonePlayer)
+        //   ? iosBannerUnit
+        //   : androidBannerUnit;
     }
 
     //    #region BANNERADS
@@ -125,6 +126,7 @@ public class GameManager : MonoBehaviour//, IUnityAdsInitializationListener
         //_loadBannerButton.interactable = true;
         highScore = groundLevel;
         PlayerPrefs.GetFloat("highScore", highScore);
+        UI.pHighScore = highScore;
     }
 
     // Update is called once per frame
@@ -137,7 +139,9 @@ public class GameManager : MonoBehaviour//, IUnityAdsInitializationListener
         if (pHeight > highScore)
         {
             highScore = pHeight;
+            UI.pHighScore = highScore;
         }
+        UI.pCurrHeight = pHeight;
     }
 
 
