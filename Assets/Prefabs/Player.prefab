@@ -76,7 +76,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 752901987
-  m_SortingLayer: 6
+  m_SortingLayer: 7
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 86ca59b9bca0e409b9ba2784fbe69f01, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -102,7 +102,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 3
-  bounceHeight: 6
+  bounceHeight: 26
+  currHeight: 0
   movedir: 0
   JumpEffect: {fileID: 6369722323075139960, guid: 0fe9ae33ca8b24048adb734d8fc54cb1, type: 3}
   bounceSFX: {fileID: 8300000, guid: 0c73b46213b3aee48a7d1e219026a910, type: 3}
@@ -256,7 +257,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.009970278, y: -0.015931904}
+  m_Offset: {x: -0.0056866407, y: -0.015931904}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -267,5 +268,5 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.2640205, y: 0.19273484}
+  m_Size: {x: 0.25996232, y: 0.19273484}
   m_EdgeRadius: 0

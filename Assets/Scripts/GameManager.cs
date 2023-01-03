@@ -148,12 +148,12 @@ public class GameManager : MonoBehaviour//, IUnityAdsInitializationListener
     IEnumerator levelGenerator()
     {
         creatingLevel = true;
-        print("level gen called");
         currentLevelPos += 25;
         int lvlToSpawn = Random.Range(1, levelSection.Length);
         if (lastLevelSpawned == levelSection[lvlToSpawn])
             lvlToSpawn = (lvlToSpawn + 1) % levelSection.Length;
         Instantiate(levelSection[lvlToSpawn], new Vector3(-1.25f, currentLevelPos, 0), Quaternion.identity);
+        lastLevelSpawned = levelSection[lvlToSpawn];
         yield return new WaitForSecondsRealtime(5);
         creatingLevel = false;
     }
