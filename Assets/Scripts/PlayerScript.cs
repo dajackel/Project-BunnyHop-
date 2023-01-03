@@ -15,7 +15,8 @@ public struct float2
 public class PlayerScript : MonoBehaviour
 {
     new Rigidbody2D rigidbody;
-    public float speed, bounceHeight;
+    public float speed, bounceHeight,
+        currHeight;
     public int movedir = 0;
     private bool grounded = false, charging = false;
     private Animator animator;
@@ -38,6 +39,7 @@ public class PlayerScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        setPlayerHeight(transform.position.y + coll.size.y);
         if (rigidbody.velocity.y <= 0)
         { /*player is now fallinng*/
             animator.SetBool("Jumping", false);
@@ -91,4 +93,7 @@ public class PlayerScript : MonoBehaviour
             movePlayerX();
         }
     }
+
+    private void setPlayerHeight(float height) { currHeight = height; }
+    public float getPlayerHeight() { return currHeight; }
 }
