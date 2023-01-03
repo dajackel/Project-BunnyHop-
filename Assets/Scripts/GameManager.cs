@@ -139,7 +139,7 @@ public class GameManager : MonoBehaviour//, IUnityAdsInitializationListener
         if (pHeight > highScore)
         {
             highScore = pHeight;
-            UI.pHighScore = highScore;
+            UI.updateHighScore(highScore);
         }
         UI.pCurrHeight = pHeight;
     }

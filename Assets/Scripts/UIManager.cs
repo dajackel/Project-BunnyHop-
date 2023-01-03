@@ -16,15 +16,18 @@ public class UIManager : MonoBehaviour
     private float maxVol;
     private bool isAudioOn;
     [SerializeField] Sprite AudioOn, AudioOff, PressedButtonSprite;
-
-    public float pHighScore, pCurrHeight;
+    [SerializeField] GameObject playerCurrHeight, playerHighScore;
+    TextMeshPro pHeightText, pHighScoreText;
+    public float pCurrHeight, pHighScore;
 
     private void Start()
     {
+        pHeightText = playerCurrHeight.GetComponent<TextMeshPro>();
+        pHighScoreText = playerHighScore.GetComponent<TextMeshPro>();
     }
     private void Update()
     {
-
+        pHeightText.text = pCurrHeight.ToString("0.000");
     }
     public void StartGame()
     {
@@ -70,4 +73,5 @@ public class UIManager : MonoBehaviour
         AudioButton.image.sprite = (isAudioOn) ? AudioOff : AudioOn;
     }
 
+    public void updateHighScore(float hs) { pHighScore = hs; pHighScoreText.text = pHighScore.ToString("0.000"); }
 }

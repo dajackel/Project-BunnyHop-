@@ -58,6 +58,9 @@ TagManager:
   - name: Platform
     uniqueID: 454265237
     locked: 0
+  - name: UI Text
+    uniqueID: 3784642185
+    locked: 0
   - name: Player
     uniqueID: 752901987
     locked: 0
