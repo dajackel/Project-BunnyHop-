@@ -1294,9 +1294,9 @@ BoxCollider2D:
   m_GameObject: {fileID: 381117677}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 8a4d497eef97aa04897a1b0f499c1b7d, type: 2}
   m_IsTrigger: 0
-  m_UsedByEffector: 0
+  m_UsedByEffector: 1
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   m_SpriteTilingProperty:
@@ -2245,7 +2245,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
-  m_BackGroundColor: {r: 0.2901961, g: 0.9294118, b: 0.9725491, a: 1}
+  m_BackGroundColor: {r: 0.2784314, g: 0.95294124, b: 1, a: 1}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -4202,7 +4202,7 @@ BoxCollider2D:
   m_GameObject: {fileID: 1031119233}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 8a4d497eef97aa04897a1b0f499c1b7d, type: 2}
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
@@ -5717,6 +5717,8 @@ MonoBehaviour:
   - {fileID: 434684716}
   - {fileID: 395865458}
   UI: {fileID: 346358361}
+  lLevelBound: {fileID: 381117677}
+  rLevelBound: {fileID: 1031119233}
   player: {fileID: 832535857}
   highScore: 0
 --- !u!4 &1538434085

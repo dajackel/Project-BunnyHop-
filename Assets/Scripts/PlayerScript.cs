@@ -65,13 +65,6 @@ public class PlayerScript : MonoBehaviour
 
         }
     }
-    private void OnCollisionStay2D(Collision2D collision)
-    {
-        if (transform.position.x > collision.collider.bounds.max.x || transform.position.x < collision.collider.bounds.min.x)
-        {
-            rigidbody.velocity += new Vector2(-rigidbody.velocity.x, 0.0f);
-        }
-    }
     private void movePlayerX()
     {
         if (Input.touchSupported)

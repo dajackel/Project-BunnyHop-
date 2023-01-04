@@ -16,13 +16,7 @@ public class CameraScript : MonoBehaviour
                 Camera.main.orthographicSize = 17.87372f;
                 //18.00567
                 break;
-            case 0.5008292f:
-                print(Camera.main.aspect);
-                print("18:9");
-                //21.56672
-                break;
             case 720.0f / 1280.0f:
-                print(Camera.main.aspect);
                 Camera.main.orthographicSize = 19.11508f;
                 break;
             case 1440.0f / 2960.0f:
@@ -36,8 +30,6 @@ public class CameraScript : MonoBehaviour
                     Camera.main.orthographicSize = 21.56672f;
                 else
                     Camera.main.orthographicSize = 19.13686f;
-                print(Camera.main.aspect);
-                print("default");
                 break;
         }
     }

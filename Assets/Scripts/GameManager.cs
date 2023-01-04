@@ -17,6 +17,7 @@ public class GameManager : MonoBehaviour//, IUnityAdsInitializationListener
     public GameObject[] levelSection;
     private GameObject lastLevelSpawned;
     [SerializeField] UIManager UI;
+    [SerializeField] GameObject lLevelBound, rLevelBound;
     private bool creatingLevel = false;
 
     //add opposite to display pretty numbers as highscore
@@ -136,6 +137,9 @@ public class GameManager : MonoBehaviour//, IUnityAdsInitializationListener
             StartCoroutine(levelGenerator());
         //top of player's head position
         float pHeight = player.getPlayerHeight();
+        lLevelBound.transform.position = new Vector3(lLevelBound.transform.position.x, pHeight, lLevelBound.transform.position.z); 
+        rLevelBound.transform.position = new Vector3(rLevelBound.transform.position.x, pHeight, rLevelBound.transform.position.z);
+
         if (pHeight > highScore)
         {
             highScore = pHeight;
