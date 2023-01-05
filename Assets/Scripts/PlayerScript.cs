@@ -15,8 +15,7 @@ public struct float2
 public class PlayerScript : MonoBehaviour
 {
     new Rigidbody2D rigidbody;
-    public float speed, bounceHeight,
-        currHeight;
+    public float speed, bounceHeight, currHeight;
     public int movedir = 0;
     private bool grounded = false, charging = false;
     private Animator animator;
@@ -57,7 +56,7 @@ public class PlayerScript : MonoBehaviour
         //check overlap
         Vector2 pMinMax = new Vector2(coll.bounds.min.x, coll.bounds.max.x);
         Vector2 oMinMax = new Vector2(collision.collider.bounds.min.x, collision.collider.bounds.max.x);
-        if (pMinMax.x < oMinMax.y && pMinMax.y > oMinMax.x && transform.position.y-0.1927f > collision.collider.bounds.max.y)
+        if (pMinMax.x < oMinMax.y && pMinMax.y > oMinMax.x && transform.position.y - 0.1927f > collision.collider.bounds.max.y)
         {
             animator.SetBool("Charging", true);
             rigidbody.velocity = Vector2.zero;

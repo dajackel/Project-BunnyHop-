@@ -18,11 +18,12 @@ public class GameManager : MonoBehaviour//, IUnityAdsInitializationListener
     public GameObject[] levelSection;
     private GameObject lastLevelSpawned;
     [SerializeField] UIManager UI;
-    [SerializeField] GameObject lLevelBound, rLevelBound;
+    [SerializeField] GameObject lLevelBound, rLevelBound, BLevelBound;
     private bool creatingLevel = false;
 
     //add opposite to display pretty numbers as highscore
     private float groundLevel = -3.69f;
+    public float maxFallDist = 50.0f;
     //Player reference to easily grab height
     [SerializeField] PlayerScript player;
     //player highscore
@@ -140,6 +141,7 @@ public class GameManager : MonoBehaviour//, IUnityAdsInitializationListener
         PlayerPrefs.GetFloat("highScore", highScore);
         if (highScore < 0) highScore += 3.69f;
         UI.updateHighScore(highScore);
+        BLevelBound.transform.position = new Vector2(BLevelBound.transform.position.x, player.transform.position.y - maxFallDist);
     }
 
     // Update is called once per frame
@@ -154,6 +156,14 @@ public class GameManager : MonoBehaviour//, IUnityAdsInitializationListener
         lLevelBound.transform.position = new Vector3(lLevelBound.transform.position.x, pHeight, lLevelBound.transform.position.z);
         rLevelBound.transform.position = new Vector3(rLevelBound.transform.position.x, pHeight, rLevelBound.transform.position.z);
 
+        BLevelBound.transform.position = new Vector2(BLevelBound.transform.position.x, Mathf.Clamp(BLevelBound.transform.position.y,player.transform.position.y-maxFallDist, BLevelBound.transform.position.y));
+
+
+
+        //if(BLevelBound.transform.position.y+maxFallDist< player.transform.position.y)
+        //    BLevelBound.transform.position = new Vector2(BLevelBound.transform.position.x, player.transform.position.y - maxFallDist);
+
+
         if (pHeight > bestHeightThisRun)
             bestHeightThisRun = pHeight;
         if (pHeight > highScore)
@@ -162,7 +172,6 @@ public class GameManager : MonoBehaviour//, IUnityAdsInitializationListener
             UI.updateHighScore(highScore);
         }
         UI.pCurrHeight = pHeight;
-        setGameState(GAME_STATE.GAME_OVER);
     }
 
 

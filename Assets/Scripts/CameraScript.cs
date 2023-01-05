@@ -5,7 +5,7 @@ using UnityEngine;
 public class CameraScript : MonoBehaviour
 {
     // Start is called before the first frame update
-    [SerializeField] GameObject Player, RLevelBound, LLevelBound;
+    [SerializeField] GameObject Player, RLevelBound, LLevelBound, BLevelBound;
     public Vector2 curVelocity;
     private float minYDist = 6.67f;
     void Start()
@@ -37,8 +37,9 @@ public class CameraScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.position = new Vector3(/*Mathf.Clamp(Player.transform.position.x,minXDist,maxXDist)*/0.0f,
-                                         Mathf.Clamp(Player.transform.position.y, minYDist, Player.transform.position.y),
-                                         transform.position.z);
+        if (minYDist < BLevelBound.transform.position.y + 18.0f) 
+            minYDist = BLevelBound.transform.position.y + 18.0f;
+        transform.position = Vector3.Lerp(transform.position, new Vector3(transform.position.x, Mathf.Clamp(Player.transform.position.y, minYDist, Player.transform.position.y),transform.position.z), Time.deltaTime);
+        //transform.position = new Vector3(0.0f, Mathf.Clamp(Player.transform.position.y, minYDist, Player.transform.position.y), transform.position.z);
     }
 }
