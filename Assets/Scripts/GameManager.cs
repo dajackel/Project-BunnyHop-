@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Advertisements;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour//, IUnityAdsInitializationListener
@@ -9,11 +10,11 @@ public class GameManager : MonoBehaviour//, IUnityAdsInitializationListener
     const string androidGameId = "", iosGameId = "",
        androidBannerUnit = "Banner_Android", iosBannerUnit = "Banner_iOS", FullScreenAd = "Pre-respawn_FS_ad";
     [SerializeField] Button _loadBannerButton, _showBannerButton, _hideBannerButton;
-    [SerializeField] BannerPosition _bannerPosition = BannerPosition.BOTTOM_CENTER;
+    //[SerializeField] BannerPosition _bannerPosition = BannerPosition.BOTTOM_CENTER;
     //bool _testMode = true;
     //private string adUnitId;
     public bool paused = false;
-    private float timeScale = 1, currentLevelPos = 0;
+    private float /*timeScale = 1,*/ currentLevelPos = 0;
     public GameObject[] levelSection;
     private GameObject lastLevelSpawned;
     [SerializeField] UIManager UI;
@@ -25,8 +26,18 @@ public class GameManager : MonoBehaviour//, IUnityAdsInitializationListener
     //Player reference to easily grab height
     [SerializeField] PlayerScript player;
     //player highscore
-    public float highScore;
+    public static float highScore, bestHeightThisRun = 0;
+    public static GAME_STATE gameState = GAME_STATE.GAME_RUNNING;
 
+    public enum GAME_STATE
+    {
+        GAME_RUNNING,
+        GAME_PAUSED,
+        GAME_OVER,
+        MAIN_MENU,
+        GAME_EXIT,
+        GAME_START,
+    }
     private void Awake()
     {
         //adUnitId = (Application.platform == RuntimePlatform.IPhonePlayer)
@@ -127,25 +138,31 @@ public class GameManager : MonoBehaviour//, IUnityAdsInitializationListener
         //_loadBannerButton.interactable = true;
         highScore = groundLevel;
         PlayerPrefs.GetFloat("highScore", highScore);
-        UI.pHighScore = highScore;
+        if (highScore < 0) highScore += 3.69f;
+        UI.updateHighScore(highScore);
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (Time.timeScale == 0)
+            return;
         if (!creatingLevel)
             StartCoroutine(levelGenerator());
         //top of player's head position
         float pHeight = player.getPlayerHeight();
-        lLevelBound.transform.position = new Vector3(lLevelBound.transform.position.x, pHeight, lLevelBound.transform.position.z); 
+        lLevelBound.transform.position = new Vector3(lLevelBound.transform.position.x, pHeight, lLevelBound.transform.position.z);
         rLevelBound.transform.position = new Vector3(rLevelBound.transform.position.x, pHeight, rLevelBound.transform.position.z);
 
+        if (pHeight > bestHeightThisRun)
+            bestHeightThisRun = pHeight;
         if (pHeight > highScore)
         {
             highScore = pHeight;
             UI.updateHighScore(highScore);
         }
         UI.pCurrHeight = pHeight;
+        setGameState(GAME_STATE.GAME_OVER);
     }
 
 
@@ -160,5 +177,40 @@ public class GameManager : MonoBehaviour//, IUnityAdsInitializationListener
         lastLevelSpawned = levelSection[lvlToSpawn];
         yield return new WaitForSecondsRealtime(5);
         creatingLevel = false;
+    }
+    public void setGameState(GAME_STATE gs)
+    {
+        gameState = gs;
+        switch (gameState)
+        {
+            case GAME_STATE.GAME_RUNNING:
+                Time.timeScale = 1;
+                break;
+            case GAME_STATE.GAME_PAUSED:
+                Time.timeScale = 0;
+                break;
+            case GAME_STATE.GAME_OVER:
+                Time.timeScale = 0;
+                UI.lossScreenTrigger();
+                break;
+            case GAME_STATE.MAIN_MENU:
+                PlayerPrefs.Save();
+                SceneManager.LoadScene("MainMenu");
+                break;
+            case GAME_STATE.GAME_EXIT:
+                QuitGame();
+                break;
+            case GAME_STATE.GAME_START:
+                SceneManager.LoadScene("MainGame");
+                break;
+
+        }
+    }
+    public GAME_STATE getGameState() { return gameState; }
+
+    public void QuitGame()
+    {
+        PlayerPrefs.Save();
+        Application.Quit();
     }
 }

@@ -29,7 +29,6 @@ public class PlayerScript : MonoBehaviour
     //extra stats
     void Start()
     {
-
         animator = GetComponent<Animator>();
         rigidbody = GetComponent<Rigidbody2D>();
         coll = GetComponent<BoxCollider2D>();
@@ -40,6 +39,8 @@ public class PlayerScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (Time.timeScale == 0)
+            return;
         setPlayerHeight(transform.position.y + coll.size.y);
         if (rigidbody.velocity.y <= 0)
         { /*player is now fallinng*/
