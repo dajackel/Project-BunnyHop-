@@ -38,6 +38,7 @@ public class GameManager : MonoBehaviour//, IUnityAdsInitializationListener
         MAIN_MENU,
         GAME_EXIT,
         GAME_START,
+        GAME_RESTART,
     }
     private void Awake()
     {
@@ -137,9 +138,8 @@ public class GameManager : MonoBehaviour//, IUnityAdsInitializationListener
 
         //_loadBannerButton.onClick.AddListener(LoadBanner);
         //_loadBannerButton.interactable = true;
-        highScore = groundLevel;
-        PlayerPrefs.GetFloat("highScore", highScore);
-        if (highScore < 0) highScore += 3.69f;
+        Time.timeScale = 1.0f;
+        highScore = PlayerPrefs.GetFloat("highScore", 0.0f);
         UI.updateHighScore(highScore);
         BLevelBound.transform.position = new Vector2(BLevelBound.transform.position.x, player.transform.position.y - maxFallDist);
     }
@@ -147,6 +147,8 @@ public class GameManager : MonoBehaviour//, IUnityAdsInitializationListener
     // Update is called once per frame
     void Update()
     {
+        if (player.lose == true)
+            setGameState(GAME_STATE.GAME_OVER);
         if (Time.timeScale == 0)
             return;
         if (!creatingLevel)
@@ -156,7 +158,7 @@ public class GameManager : MonoBehaviour//, IUnityAdsInitializationListener
         lLevelBound.transform.position = new Vector3(lLevelBound.transform.position.x, pHeight, lLevelBound.transform.position.z);
         rLevelBound.transform.position = new Vector3(rLevelBound.transform.position.x, pHeight, rLevelBound.transform.position.z);
 
-        BLevelBound.transform.position = new Vector2(BLevelBound.transform.position.x, Mathf.Clamp(BLevelBound.transform.position.y,player.transform.position.y-maxFallDist, BLevelBound.transform.position.y));
+        BLevelBound.transform.position = new Vector2(BLevelBound.transform.position.x, Mathf.Clamp(BLevelBound.transform.position.y, player.transform.position.y - maxFallDist, BLevelBound.transform.position.y));
 
         if (pHeight > bestHeightThisRun)
             bestHeightThisRun = pHeight;
@@ -164,6 +166,7 @@ public class GameManager : MonoBehaviour//, IUnityAdsInitializationListener
         {
             highScore = pHeight;
             UI.updateHighScore(highScore);
+            PlayerPrefs.SetFloat("highScore", highScore);
         }
         UI.pCurrHeight = pHeight;
     }
@@ -194,6 +197,7 @@ public class GameManager : MonoBehaviour//, IUnityAdsInitializationListener
                 break;
             case GAME_STATE.GAME_OVER:
                 Time.timeScale = 0;
+                PlayerPrefs.Save();
                 UI.lossScreenTrigger();
                 break;
             case GAME_STATE.MAIN_MENU:
@@ -202,6 +206,11 @@ public class GameManager : MonoBehaviour//, IUnityAdsInitializationListener
                 break;
             case GAME_STATE.GAME_EXIT:
                 QuitGame();
+                break;
+            case GAME_STATE.GAME_RESTART:
+                bestHeightThisRun = 0.0f;
+                Time.timeScale = 1.0f;
+                SceneManager.LoadScene("MainGame");
                 break;
             case GAME_STATE.GAME_START:
                 SceneManager.LoadScene("MainGame");

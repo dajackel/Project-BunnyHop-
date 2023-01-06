@@ -60,7 +60,7 @@ public class UIManager : MonoBehaviour
     }
     public void restartGame()
     {
-        GameManager.setGameState(GameManager.GAME_STATE.GAME_START);
+        GameManager.setGameState(GameManager.GAME_STATE.GAME_RESTART);
     }
 
     public void updateHighScore(float hs) { pHighScore = hs; pHighScoreText.text = pHighScore.ToString("0.000"); }

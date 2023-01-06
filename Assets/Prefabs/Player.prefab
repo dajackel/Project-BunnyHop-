@@ -105,6 +105,7 @@ MonoBehaviour:
   bounceHeight: 26
   currHeight: 0
   movedir: 0
+  lose: 0
   JumpEffect: {fileID: 6369722323075139960, guid: 0fe9ae33ca8b24048adb734d8fc54cb1, type: 3}
   bounceSFX: {fileID: 8300000, guid: 0c73b46213b3aee48a7d1e219026a910, type: 3}
 --- !u!50 &8352070866440270248

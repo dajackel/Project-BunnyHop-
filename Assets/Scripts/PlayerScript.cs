@@ -17,12 +17,12 @@ public class PlayerScript : MonoBehaviour
     new Rigidbody2D rigidbody;
     public float speed, bounceHeight, currHeight;
     public int movedir = 0;
-    private bool grounded = false, charging = false;
+    private bool grounded = false;
+    public bool lose = false;
     private Animator animator;
     private SpriteRenderer spriteRenderer;
     [SerializeField] GameObject JumpEffect;
     private BoxCollider2D coll;
-    private ParticleSystem particle;
     private AudioSource audioSource;
     [SerializeField] AudioClip bounceSFX;
     //extra stats
@@ -32,7 +32,6 @@ public class PlayerScript : MonoBehaviour
         rigidbody = GetComponent<Rigidbody2D>();
         coll = GetComponent<BoxCollider2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
-        particle = GetComponent<ParticleSystem>();
         audioSource = GetComponent<AudioSource>();
     }
     // Update is called once per frame
@@ -40,7 +39,7 @@ public class PlayerScript : MonoBehaviour
     {
         if (Time.timeScale == 0)
             return;
-        setPlayerHeight(transform.position.y + coll.size.y);
+        setPlayerHeight((transform.position.y + coll.size.y<0)?0: transform.position.y + coll.size.y);
         if (rigidbody.velocity.y <= 0)
         { /*player is now fallinng*/
             animator.SetBool("Jumping", false);
@@ -64,6 +63,11 @@ public class PlayerScript : MonoBehaviour
             grounded = true;
 
         }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        lose = true;
     }
     private void movePlayerX()
     {
@@ -92,7 +96,7 @@ public class PlayerScript : MonoBehaviour
     IEnumerator landed()
     {
         yield return new WaitForSeconds(3);
-        if (!charging && grounded)
+        if (grounded)
         {
             //jump
             rigidbody.velocity = new Vector2(rigidbody.velocity.x, bounceHeight);
