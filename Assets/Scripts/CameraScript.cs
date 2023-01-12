@@ -32,14 +32,26 @@ public class CameraScript : MonoBehaviour
                     Camera.main.orthographicSize = 19.13686f;
                 break;
         }
+        if (Camera.main.pixelWidth == 720.0f)
+        {
+            Camera.main.orthographicSize = 23.96643f;
+            transform.position = new Vector3(transform.position.x, 11.32f, transform.position.z);
+            minYDist = 11.32f;
+        }
+        else if (Camera.main.pixelWidth == 1200.0f)
+        {
+            Camera.main.orthographicSize = 17.28737f;
+            //transform.position = new Vector3(transform.position.x, 11.32f, transform.position.z);
+            //minYDist = 11.32f;
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (minYDist < BLevelBound.transform.position.y + 18.0f) 
+        if (minYDist < BLevelBound.transform.position.y + 18.0f)
             minYDist = BLevelBound.transform.position.y + 18.0f;
-        transform.position = Vector3.Lerp(transform.position, new Vector3(transform.position.x, Mathf.Clamp(Player.transform.position.y, minYDist, Player.transform.position.y),transform.position.z), Time.deltaTime);
+        transform.position = Vector3.Lerp(transform.position, new Vector3(transform.position.x, Mathf.Clamp(Player.transform.position.y, minYDist, Player.transform.position.y), transform.position.z), Time.deltaTime);
         //transform.position = new Vector3(0.0f, Mathf.Clamp(Player.transform.position.y, minYDist, Player.transform.position.y), transform.position.z);
     }
 }

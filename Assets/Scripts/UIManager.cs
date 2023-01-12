@@ -31,6 +31,8 @@ public class UIManager : MonoBehaviour
     }
     public void TogglePauseMenu()
     {
+        if (GameManager.getGameState() == GameManager.GAME_STATE.GAME_OVER)
+            return;
         GameManager.setGameState((GameManager.getGameState() == GameManager.GAME_STATE.GAME_RUNNING) ? GameManager.GAME_STATE.GAME_PAUSED : GameManager.GAME_STATE.GAME_RUNNING);
         PauseMenu.SetActive(!PauseMenu.activeSelf);
     }
@@ -49,7 +51,7 @@ public class UIManager : MonoBehaviour
         isAudioOn = !isAudioOn;
         float vol;
         masterMixer.GetFloat("MasterVolume", out vol);
-        masterMixer.SetFloat("MasterVolume", (vol== -80.0f) ? 0.0f : -80.0f);
+        masterMixer.SetFloat("MasterVolume", (vol == -80.0f) ? 0.0f : -80.0f);
 
         AudioButton.image.sprite = (isAudioOn) ? AudioOff : AudioOn;
     }
@@ -70,9 +72,7 @@ public class UIManager : MonoBehaviour
         LossWindow.SetActive(true);
         //0 == highscore, 1 == best height this run
         TextMeshProUGUI[] lossText = LossWindow.GetComponentsInChildren<TextMeshProUGUI>();
-        lossText[0].text = "HighScore\n"+ pHighScoreText.text;
+        lossText[0].text = "HighScore\n" + pHighScoreText.text;
         lossText[1].text = "Best Height This Run\n" + GameManager.bestHeightThisRun.ToString("0.000");
-
-
     }
 }

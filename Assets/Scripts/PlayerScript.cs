@@ -39,12 +39,13 @@ public class PlayerScript : MonoBehaviour
     {
         if (Time.timeScale == 0)
             return;
-        setPlayerHeight((transform.position.y + coll.size.y<0)?0: transform.position.y + coll.size.y);
+        setPlayerHeight((transform.position.y + coll.size.y < 0) ? 0 : transform.position.y + coll.size.y);
         if (rigidbody.velocity.y <= 0)
         { /*player is now fallinng*/
             animator.SetBool("Jumping", false);
             coll.enabled = true;
         }
+
         if (!grounded)
             movePlayerX();
 
@@ -52,10 +53,13 @@ public class PlayerScript : MonoBehaviour
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        //early exit for edge case of hitting platforms perfectly to stop early
+        if (rigidbody.velocity.y > 0)
+            return;
         //check overlap
-        Vector2 pMinMax = new Vector2(coll.bounds.min.x, coll.bounds.max.x);
+        Vector2 pMinMax = new Vector2(coll.bounds.min.x-0.05f, coll.bounds.max.x+ -0.05f);
         Vector2 oMinMax = new Vector2(collision.collider.bounds.min.x, collision.collider.bounds.max.x);
-        if (pMinMax.x < oMinMax.y && pMinMax.y > oMinMax.x && transform.position.y - 0.1927f > collision.collider.bounds.max.y)
+        if (pMinMax.x < oMinMax.y && pMinMax.y > oMinMax.x && transform.position.y - 0.6f > collision.collider.bounds.max.y)
         {
             animator.SetBool("Charging", true);
             rigidbody.velocity = Vector2.zero;
@@ -73,9 +77,13 @@ public class PlayerScript : MonoBehaviour
     {
         if (Input.touchSupported)
         {
-            Touch[] touches = Input.touches;
-            Vector3.Lerp(transform.position, touches[touches.Length - 1].position, speed);
-
+            if (Input.touchCount > 0)
+            {
+                Touch touch = Input.GetTouch(0);
+                Vector3 targetPos = Camera.main.ScreenToWorldPoint(touch.position);
+                targetPos = new Vector3(targetPos.x, transform.position.y, transform.position.z);
+                transform.position = Vector3.Lerp(transform.position, targetPos, speed * Time.deltaTime);
+            }
         }
         else
         {
@@ -119,8 +127,9 @@ public class PlayerScript : MonoBehaviour
         if (Input.touchSupported)
         {
 
-            Touch[] touches = Input.touches;
-            float posDifference = touches[touches.Length - 1].position.x - transform.position.x;
+            Touch touch = Input.GetTouch(0);
+            Vector3 targetPos = Camera.main.ScreenToWorldPoint(touch.position);
+            float posDifference = targetPos.x - transform.position.x;
             if (posDifference > 0) //touch occured to the right of the player
                 spriteRenderer.flipX = true;
             else //touch occured to the left of the player

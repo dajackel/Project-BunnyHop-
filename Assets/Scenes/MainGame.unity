@@ -1816,7 +1816,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 346358361}
         m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
-        m_MethodName: ReturnToMenu
+        m_MethodName: ToggleConfirmWindow
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -6996,7 +6996,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 346358361}
         m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
-        m_MethodName: ReturnToMenu
+        m_MethodName: returnToMenu
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

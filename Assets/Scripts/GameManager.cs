@@ -28,7 +28,7 @@ public class GameManager : MonoBehaviour//, IUnityAdsInitializationListener
     [SerializeField] PlayerScript player;
     //player highscore
     public static float highScore, bestHeightThisRun = 0;
-    public static GAME_STATE gameState = GAME_STATE.GAME_RUNNING;
+    public static GAME_STATE gameState;
 
     public enum GAME_STATE
     {
@@ -138,6 +138,7 @@ public class GameManager : MonoBehaviour//, IUnityAdsInitializationListener
 
         //_loadBannerButton.onClick.AddListener(LoadBanner);
         //_loadBannerButton.interactable = true;
+        gameState = GAME_STATE.GAME_RUNNING;
         Time.timeScale = 1.0f;
         highScore = PlayerPrefs.GetFloat("highScore", 0.0f);
         UI.updateHighScore(highScore);
@@ -147,7 +148,7 @@ public class GameManager : MonoBehaviour//, IUnityAdsInitializationListener
     // Update is called once per frame
     void Update()
     {
-        if (player.lose == true)
+        if (player.lose == true || BLevelBound.transform.position.y >= player.transform.position.y)
             setGameState(GAME_STATE.GAME_OVER);
         if (Time.timeScale == 0)
             return;
