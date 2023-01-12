@@ -10,11 +10,11 @@ TagManager:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Player
   - Water
   - UI
-  - PauseCameraRender
   - 
+  - Enemies
   - 
   - 
   - 
@@ -57,6 +57,9 @@ TagManager:
     locked: 0
   - name: Platform
     uniqueID: 454265237
+    locked: 0
+  - name: Enemies
+    uniqueID: 315726615
     locked: 0
   - name: UI Text
     uniqueID: 3784642185
