@@ -103,7 +103,7 @@ public class PlayerScript : MonoBehaviour
     }
     IEnumerator landed()
     {
-        yield return new WaitForSeconds(3);
+        yield return new WaitForSeconds(1);
         if (grounded)
         {
             //jump

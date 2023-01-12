@@ -182,7 +182,7 @@ public class GameManager : MonoBehaviour//, IUnityAdsInitializationListener
             lvlToSpawn = (lvlToSpawn + 1) % levelSection.Length;
         Instantiate(levelSection[lvlToSpawn], new Vector3(-1.25f, currentLevelPos, 0), Quaternion.identity);
         lastLevelSpawned = levelSection[lvlToSpawn];
-        yield return new WaitForSecondsRealtime(5);
+        yield return new WaitForSecondsRealtime(3);
         creatingLevel = false;
     }
     public void setGameState(GAME_STATE gs)
