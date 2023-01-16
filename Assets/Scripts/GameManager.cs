@@ -190,8 +190,13 @@ public class GameManager : MonoBehaviour//, IUnityAdsInitializationListener
         if (spawnVal <= ENEMY_SPAWN_CHANCE)
         {
             //Enemy needs to spawn
-            bool leftOrRightSide = (spawnVal % 2 != 0) ? true : false;
-            Instantiate(enemy, new Vector3((leftOrRightSide) ? 13 : -14, currentLevelPos, 0), (leftOrRightSide) ? Quaternion.identity : Quaternion.Euler(0, 180, 0));
+            bool leftOrRightSide = (spawnVal % 2 == 0) ? true : false;
+            GameObject curEnemy = Instantiate(enemy, new Vector3((leftOrRightSide) ? -14 : 13, Random.Range(player.getPlayerHeight(), player.getPlayerHeight()+25), 0), (leftOrRightSide) ? Quaternion.identity : Quaternion.Euler(0, 180, 0));
+            Rigidbody2D eRigidBody = curEnemy.GetComponent<Rigidbody2D>();
+            if (leftOrRightSide)
+                curEnemy.GetComponent<Rigidbody2D>().velocity = new Vector2(enemy.GetComponent<enemyScript>().speed, eRigidBody.velocity.y);
+            else
+                curEnemy.GetComponent<Rigidbody2D>().velocity = new Vector2(-enemy.GetComponent<enemyScript>().speed, eRigidBody.velocity.y);
         }
         Instantiate(levelSection[lvlToSpawn], new Vector3(-1.25f, currentLevelPos, 0), Quaternion.identity);
         lastLevelSpawned = levelSection[lvlToSpawn];
