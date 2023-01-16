@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 2782727828429332627}
   m_Layer: 0
   m_Name: extended rock platform
-  m_TagString: Untagged
+  m_TagString: Platform
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

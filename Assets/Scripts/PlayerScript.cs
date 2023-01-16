@@ -57,7 +57,7 @@ public class PlayerScript : MonoBehaviour
         if (rigidbody.velocity.y > 0)
             return;
         //check overlap
-        Vector2 pMinMax = new Vector2(coll.bounds.min.x-0.05f, coll.bounds.max.x+ -0.05f);
+        Vector2 pMinMax = new Vector2(coll.bounds.min.x - 0.05f, coll.bounds.max.x + -0.05f);
         Vector2 oMinMax = new Vector2(collision.collider.bounds.min.x, collision.collider.bounds.max.x);
         if (pMinMax.x < oMinMax.y && pMinMax.y > oMinMax.x && transform.position.y - 0.6f > collision.collider.bounds.max.y)
         {
@@ -71,7 +71,21 @@ public class PlayerScript : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        lose = true;
+        if (collision.tag == "Enemy")
+        {
+            if (rigidbody.velocity.y <= 0)
+            {
+                collision.GetComponent<enemyScript>().setIsAlive(false);
+                rigidbody.velocity = new Vector2(rigidbody.velocity.x, bounceHeight - 6);//less height than normal
+                animator.SetBool("Jumping", true);  //change sprites
+                                                    //play sfx
+                if (audioSource.clip != bounceSFX)
+                    audioSource.clip = bounceSFX;
+                audioSource.Play();
+            }
+        }
+        else
+            lose = true;
     }
     private void movePlayerX()
     {

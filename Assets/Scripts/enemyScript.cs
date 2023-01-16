@@ -7,8 +7,9 @@ public class enemyScript : MonoBehaviour
     // Start is called before the first frame update
     private Rigidbody2D rigidBody;
     private Animator animator;
-    private float speed = 3.0f,
+    private float speed = 0,//3.0f,
         lifetime = 10.0f;
+    private bool isAlive = true;
     void Start()
     {
         rigidBody = GetComponent<Rigidbody2D>();
@@ -18,18 +19,25 @@ public class enemyScript : MonoBehaviour
     private void Update()
     {
         if (lifetime <= 0)
-            animator.SetTrigger("DeathTrigger");
+            setIsAlive(false);
         else
             lifetime -= Time.deltaTime;
     }
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        rigidBody.velocity = Vector2.zero;
-        animator.SetTrigger("DeathTrigger");
-    }
     private void destroyObject()
     {
-        print("destroy called");
         Destroy(gameObject);
     }
+
+    public bool getIsAlive() { return isAlive; }
+    public void setIsAlive(bool tf)
+    {
+        isAlive = tf;
+        if (!isAlive)
+        {
+            GetComponent<AudioSource>().Play();
+            animator.SetTrigger("DeathTrigger");
+            rigidBody.velocity = Vector2.zero;
+        }
+    }
+
 }
