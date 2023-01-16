@@ -23,7 +23,7 @@ public class GameManager : MonoBehaviour//, IUnityAdsInitializationListener
 
     //add opposite to display pretty numbers as highscore
     private float groundLevel = -3.69f;
-    private float maxFallDist = 25.0f;
+    private float maxFallDist = 26.0f;
 
     //Player reference to easily grab height
     [SerializeField] PlayerScript player;

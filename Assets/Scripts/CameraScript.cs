@@ -10,48 +10,52 @@ public class CameraScript : MonoBehaviour
     private float minYDist = 6.67f;
     void Start()
     {
-        switch (Camera.main.aspect)
+        // set the desired aspect ratio (the values in this example are
+        // hard-coded for 16:9, but you could make them into public
+        // variables instead so you can set them at design time)
+        float targetaspect = 9.0f / 16.0f;
+
+        // determine the game window's current aspect ratio
+        float windowaspect = (float)Screen.width / (float)Screen.height;
+
+        // current viewport height should be scaled by this amount
+        float scaleheight = windowaspect / targetaspect;
+
+        // obtain camera component so we can modify its viewport
+        Camera camera = GetComponent<Camera>();
+
+        // if scaled height is less than current height, add letterbox
+        if (scaleheight < 1.0f)
         {
-            case 480.0f / 800.0f:
-                Camera.main.orthographicSize = 17.87372f;
-                //18.00567
-                break;
-            case 720.0f / 1280.0f:
-                Camera.main.orthographicSize = 19.11508f;
-                break;
-            case 1440.0f / 2960.0f:
-                Camera.main.orthographicSize = 22.14385f;
-                break;
-            case 1080.0f / 2160.0f:
-                Camera.main.orthographicSize = 21.57014f;
-                break;
-            default:
-                if (Camera.main.aspect - 0.5008292f < 0)
-                    Camera.main.orthographicSize = 21.56672f;
-                else
-                    Camera.main.orthographicSize = 19.13686f;
-                break;
+            Rect rect = camera.rect;
+
+            rect.width = 1.0f;
+            rect.height = scaleheight;
+            rect.x = 0;
+            rect.y = (1.0f - scaleheight) / 2.0f;
+
+            camera.rect = rect;
         }
-        if (Camera.main.pixelWidth == 720.0f)
+        else // add pillarbox
         {
-            Camera.main.orthographicSize = 23.96643f;
-            transform.position = new Vector3(transform.position.x, 11.32f, transform.position.z);
-            minYDist = 11.32f;
-        }
-        else if (Camera.main.pixelWidth == 1200.0f)
-        {
-            Camera.main.orthographicSize = 17.28737f;
-            //transform.position = new Vector3(transform.position.x, 11.32f, transform.position.z);
-            //minYDist = 11.32f;
+            float scalewidth = 1.0f / scaleheight;
+
+            Rect rect = camera.rect;
+
+            rect.width = scalewidth;
+            rect.height = 1.0f;
+            rect.x = (1.0f - scalewidth) / 2.0f;
+            rect.y = 0;
+
+            camera.rect = rect;
         }
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (minYDist < BLevelBound.transform.position.y + 18.0f)
-            minYDist = BLevelBound.transform.position.y + 18.0f;
+        if (minYDist < BLevelBound.transform.position.y + 22f)
+            minYDist = BLevelBound.transform.position.y + 22f;
         transform.position = Vector3.Lerp(transform.position, new Vector3(transform.position.x, Mathf.Clamp(Player.transform.position.y, minYDist, Player.transform.position.y), transform.position.z), Time.deltaTime);
-        //transform.position = new Vector3(0.0f, Mathf.Clamp(Player.transform.position.y, minYDist, Player.transform.position.y), transform.position.z);
     }
 }

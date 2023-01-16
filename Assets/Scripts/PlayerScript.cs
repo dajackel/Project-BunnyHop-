@@ -73,14 +73,15 @@ public class PlayerScript : MonoBehaviour
     {
         if (collision.tag == "Enemy")
         {
+            if (grounded)
+                return;
             if (rigidbody.velocity.y <= 0)
             {
                 collision.GetComponent<enemyScript>().setIsAlive(false);
                 rigidbody.velocity = new Vector2(rigidbody.velocity.x, bounceHeight - 6);//less height than normal
                 animator.SetBool("Jumping", true);  //change sprites
                                                     //play sfx
-                if (audioSource.clip != bounceSFX)
-                    audioSource.clip = bounceSFX;
+                if (!audioSource.isPlaying)
                 audioSource.Play();
             }
         }
@@ -120,16 +121,15 @@ public class PlayerScript : MonoBehaviour
         yield return new WaitForSeconds(1);
         if (grounded)
         {
+            //play sfx
+            if (!audioSource.isPlaying)
+                audioSource.Play();
             //jump
             rigidbody.velocity = new Vector2(rigidbody.velocity.x, bounceHeight);
             //change sprites
             animator.SetBool("Charging", false);
             animator.SetBool("Jumping", true);
             grounded = false;
-            //play sfx
-            if (audioSource.clip != bounceSFX)
-                audioSource.clip = bounceSFX;
-            audioSource.Play();
         }
     }
 

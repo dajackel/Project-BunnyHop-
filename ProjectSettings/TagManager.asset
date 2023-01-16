@@ -68,6 +68,6 @@ TagManager:
   - name: Player
     uniqueID: 752901987
     locked: 0
-  - name: Bounds
+  - name: UIMenus
     uniqueID: 2648415399
     locked: 0

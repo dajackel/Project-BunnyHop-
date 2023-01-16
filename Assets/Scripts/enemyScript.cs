@@ -18,7 +18,7 @@ public class enemyScript : MonoBehaviour
     private void Update()
     {
         if (lifetime <= 0)
-            setIsAlive(false);
+            destroyObject();
         else
             lifetime -= Time.deltaTime;
     }
@@ -33,10 +33,16 @@ public class enemyScript : MonoBehaviour
         isAlive = tf;
         if (!isAlive)
         {
-            GetComponent<AudioSource>().Play();
             animator.SetTrigger("DeathTrigger");
             rigidBody.velocity = Vector2.zero;
         }
     }
-
+    public void playDeathAudioClip()
+    {
+        if (!getIsAlive())
+        {
+            print("hit");
+            GetComponent<AudioSource>().Play();
+        }
+    }
 }
