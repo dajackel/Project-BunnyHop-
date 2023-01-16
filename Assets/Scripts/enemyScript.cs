@@ -7,7 +7,7 @@ public class enemyScript : MonoBehaviour
     // Start is called before the first frame update
     private Rigidbody2D rigidBody;
     private Animator animator;
-    private float speed = 0,//3.0f,
+    private float speed = 3.0f,
         lifetime = 10.0f;
     private bool isAlive = true;
     void Start()

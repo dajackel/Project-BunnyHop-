@@ -24,8 +24,12 @@ public class GameManager : MonoBehaviour//, IUnityAdsInitializationListener
     //add opposite to display pretty numbers as highscore
     private float groundLevel = -3.69f;
     private float maxFallDist = 25.0f;
+
     //Player reference to easily grab height
     [SerializeField] PlayerScript player;
+
+    //Enemy prefab for random spawning
+    [SerializeField] GameObject enemy;
     //player highscore
     public static float highScore, bestHeightThisRun = 0;
     public static GAME_STATE gameState;
@@ -175,11 +179,20 @@ public class GameManager : MonoBehaviour//, IUnityAdsInitializationListener
 
     IEnumerator levelGenerator()
     {
+        float ENEMY_SPAWN_CHANCE = 25;
         creatingLevel = true;
         currentLevelPos += 25;
         int lvlToSpawn = Random.Range(1, levelSection.Length);
         if (lastLevelSpawned == levelSection[lvlToSpawn])
             lvlToSpawn = (lvlToSpawn + 1) % levelSection.Length;
+        //-14 +13
+        float spawnVal = Random.Range(1, 100);
+        if (spawnVal <= ENEMY_SPAWN_CHANCE)
+        {
+            //Enemy needs to spawn
+            bool leftOrRightSide = (spawnVal % 2 != 0) ? true : false;
+            Instantiate(enemy, new Vector3((leftOrRightSide) ? 13 : -14, currentLevelPos, 0), (leftOrRightSide) ? Quaternion.identity : Quaternion.Euler(0, 180, 0));
+        }
         Instantiate(levelSection[lvlToSpawn], new Vector3(-1.25f, currentLevelPos, 0), Quaternion.identity);
         lastLevelSpawned = levelSection[lvlToSpawn];
         yield return new WaitForSecondsRealtime(3);
