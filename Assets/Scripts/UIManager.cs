@@ -19,6 +19,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] GameObject playerCurrHeight, playerHighScore;
     TextMeshPro pHeightText, pHighScoreText;
     public float pCurrHeight, pHighScore;
+    public int extraLifeCount = 0;
 
     private void Start()
     {
@@ -69,10 +70,36 @@ public class UIManager : MonoBehaviour
 
     public void lossScreenTrigger()
     {
-        LossWindow.SetActive(true);
-        //0 == highscore, 1 == best height this run
+        if (LossWindow.activeSelf)
+        {
+            LossWindow.SetActive(false);
+            return;
+        }
+        //0 == highscore, 1 == best height this run, 2 == extra life count
         TextMeshProUGUI[] lossText = LossWindow.GetComponentsInChildren<TextMeshProUGUI>();
         lossText[0].text = "HighScore\n" + pHighScoreText.text;
         lossText[1].text = "Best Height This Run\n" + GameManager.bestHeightThisRun.ToString("0.000");
+        lossText[2].text = "x" + extraLifeCount.ToString();
+        //0 == restart, 1 == backtomenu, 2 == extralife
+        Button[] lossUIImages = LossWindow.GetComponentsInChildren<Button>();
+        if (extraLifeCount <= 0)
+        {
+            lossUIImages[2].interactable = false;
+            Color tempColor= lossText[2].faceColor;
+            tempColor.a = 50;
+            lossText[2].faceColor = tempColor;
+        }
+        else
+        {
+            lossUIImages[2].interactable = true;
+            Color tempColor = lossText[2].faceColor;
+            tempColor.a = 256;
+            lossText[2].faceColor = tempColor;
+        }
+        LossWindow.SetActive(true);
+    }
+    public void Continue()
+    {
+        GameManager.setGameState(GameManager.GAME_STATE.GAME_CONTINUE);
     }
 }

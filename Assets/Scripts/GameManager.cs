@@ -38,6 +38,7 @@ public class GameManager : MonoBehaviour//, IUnityAdsInitializationListener
     {
         GAME_RUNNING,
         GAME_PAUSED,
+        GAME_CONTINUE,
         GAME_OVER,
         MAIN_MENU,
         GAME_EXIT,
@@ -152,10 +153,10 @@ public class GameManager : MonoBehaviour//, IUnityAdsInitializationListener
     // Update is called once per frame
     void Update()
     {
-        if (player.lose == true || BLevelBound.transform.position.y >= player.transform.position.y)
-            setGameState(GAME_STATE.GAME_OVER);
         if (Time.timeScale == 0)
             return;
+        if (player.lose == true || BLevelBound.transform.position.y >= player.transform.position.y)
+            setGameState(GAME_STATE.GAME_OVER);
         if (!creatingLevel)
             StartCoroutine(levelGenerator());
         //top of player's head position
@@ -191,7 +192,7 @@ public class GameManager : MonoBehaviour//, IUnityAdsInitializationListener
         {
             //Enemy needs to spawn
             bool leftOrRightSide = (spawnVal % 2 == 0) ? true : false;
-            GameObject curEnemy = Instantiate(enemy, new Vector3((leftOrRightSide) ? -14 : 13, Random.Range(player.getPlayerHeight(), player.getPlayerHeight()+25), 0), (leftOrRightSide) ? Quaternion.identity : Quaternion.Euler(0, 180, 0));
+            GameObject curEnemy = Instantiate(enemy, new Vector3((leftOrRightSide) ? -14 : 13, Random.Range(player.getPlayerHeight(), player.getPlayerHeight() + 25), 0), (leftOrRightSide) ? Quaternion.identity : Quaternion.Euler(0, 180, 0));
             Rigidbody2D eRigidBody = curEnemy.GetComponent<Rigidbody2D>();
             if (leftOrRightSide)
                 curEnemy.GetComponent<Rigidbody2D>().velocity = new Vector2(enemy.GetComponent<enemyScript>().speed, eRigidBody.velocity.y);
@@ -215,9 +216,16 @@ public class GameManager : MonoBehaviour//, IUnityAdsInitializationListener
                 Time.timeScale = 0;
                 break;
             case GAME_STATE.GAME_OVER:
+                UI.extraLifeCount = player.getExtraLifeCount();
                 Time.timeScale = 0;
                 PlayerPrefs.Save();
                 UI.lossScreenTrigger();
+                break;
+            case GAME_STATE.GAME_CONTINUE:
+                player.useExtraLife();
+                player.lose = false;
+                UI.lossScreenTrigger();
+                setGameState(GAME_STATE.GAME_RUNNING);
                 break;
             case GAME_STATE.MAIN_MENU:
                 PlayerPrefs.Save();

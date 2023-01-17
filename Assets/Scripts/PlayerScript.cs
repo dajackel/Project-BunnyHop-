@@ -16,8 +16,8 @@ public class PlayerScript : MonoBehaviour
 {
     new Rigidbody2D rigidbody;
     public float speed, bounceHeight, currHeight;
-    public int movedir = 0;
-    private bool grounded = false;
+    private int extraLives = 0;
+    private bool grounded = false, invincible = false;
     public bool lose = false;
     private Animator animator;
     private SpriteRenderer spriteRenderer;
@@ -39,6 +39,10 @@ public class PlayerScript : MonoBehaviour
     {
         if (Time.timeScale == 0)
             return;
+        if (invincible)
+            if (spriteRenderer.color == Color.white)
+                invincible = false;
+
         setPlayerHeight((transform.position.y + coll.size.y < 0) ? 0 : transform.position.y + coll.size.y);
         if (rigidbody.velocity.y <= 0)
         { /*player is now fallinng*/
@@ -83,15 +87,30 @@ public class PlayerScript : MonoBehaviour
                 animator.SetBool("Jumping", true);  //change sprites
                                                     //play sfx
                 if (!audioSource.isPlaying)
-                audioSource.Play();
+                    audioSource.Play();
             }
         }
         else if (collTag == "Item")
         {
-
+            string itemName = collision.name;
+            if (itemName == "InvincibilityPowerUp")
+                invincible = true;
+            if (itemName == "ExtraLifePowerUp")
+                extraLives++;
         }
         else
-            lose = true;
+        {
+            if (invincible)
+            {
+                rigidbody.velocity = new Vector2(rigidbody.velocity.x, bounceHeight);//less height than normal
+                animator.SetBool("Jumping", true);  //change sprites
+                                                    //play sfx
+                if (!audioSource.isPlaying)
+                    audioSource.Play();
+            }
+            else
+                lose = true;
+        }
     }
     private void movePlayerX()
     {
@@ -107,9 +126,9 @@ public class PlayerScript : MonoBehaviour
         }
         else
         {
-            if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow) || movedir == 1)
+            if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
                 rigidbody.velocity = new Vector2(-speed, rigidbody.velocity.y);
-            else if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow) || movedir == 2)
+            else if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
                 rigidbody.velocity = new Vector2(speed, rigidbody.velocity.y);
 
             if (Input.GetKeyUp(KeyCode.A) || Input.GetKeyUp(KeyCode.LeftArrow) || Input.GetKeyUp(KeyCode.D) || Input.GetKeyUp(KeyCode.RightArrow))
@@ -117,10 +136,6 @@ public class PlayerScript : MonoBehaviour
         }
     }
 
-    public void setMoveDir(int x)
-    {
-        movedir = x;
-    }
     IEnumerator landed()
     {
         yield return new WaitForSeconds(1);
@@ -158,16 +173,32 @@ public class PlayerScript : MonoBehaviour
         {
             if (spriteRenderer.flipX) //looking left
             {
-                if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow) || movedir == 1)
+                if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
                     spriteRenderer.flipX = !spriteRenderer.flipX;
             }
 
             else if (!spriteRenderer.flipX)//looking right
             {
-                if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow) || movedir == 2)
+                if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
                     spriteRenderer.flipX = !spriteRenderer.flipX;
             }
             //else no change needed skip functionality entirely
+        }
+    }
+
+    public int getExtraLifeCount() { return extraLives; }
+    public void useExtraLife()
+    {
+        if (extraLives == 0)
+            Debug.DebugBreak();
+        else
+        {
+            extraLives--;
+            rigidbody.velocity = new Vector2(rigidbody.velocity.x, bounceHeight);
+            animator.SetBool("Jumping", true);  //change sprites
+                                                //play sfx
+            if (!audioSource.isPlaying)
+                audioSource.Play();
         }
     }
 }

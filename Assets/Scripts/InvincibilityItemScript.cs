@@ -24,13 +24,24 @@ public class InvincibilityItemScript : MonoBehaviour
         }
     }
 
-private void OnTriggerEnter2D(Collider2D collision)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
+        if (!gameObject.GetComponent<AudioSource>().isPlaying)
+        {
+            gameObject.GetComponent<AudioSource>().Play();
+            StartCoroutine(disableAudio());
+        }
         gameObject.GetComponent<Animator>().SetTrigger("Item PickUp");
         effectedObject = collision.gameObject;
     }
     private void hideSprite()
     {
         gameObject.GetComponent<SpriteRenderer>().forceRenderingOff = true;
+    }
+    IEnumerator disableAudio()
+    {
+        var audio = gameObject.GetComponent<AudioSource>();
+        yield return new WaitUntil(() => audio.isPlaying == false);
+        audio.enabled = false;
     }
 }
