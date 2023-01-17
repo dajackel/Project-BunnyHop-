@@ -5,31 +5,37 @@ using UnityEngine;
 public class MovingPlatformScript : MonoBehaviour
 {
     [SerializeField] float speed;
-    [SerializeField] float leftMost, rightMost;
-    private Vector3 leftMostV, rightMostV;
+    [SerializeField] Vector3 startPos, endPos;
     private Vector3 targetPosition;
-    private bool waiting = false;
+    private bool waiting = false, canMove = true;
     // Start is called before the first frame update
     void Start()
     {
-        leftMostV = new Vector3(leftMost, transform.position.y, transform.position.z);
-        rightMostV = new Vector3(rightMost, transform.position.y, transform.position.z);
-        targetPosition = rightMostV;
+        targetPosition = endPos;
     }
 
     // Update is called once per frame
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        canMove = false;
+    }
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        canMove = true;
+    }
     void FixedUpdate()
     {
+        if (!canMove)
+            return;
         transform.position = Vector3.MoveTowards(transform.position, targetPosition, speed * Time.deltaTime);
         if (!waiting && transform.position == targetPosition)
-            switchDirection();
+            StartCoroutine(switchDirection());
     }
     IEnumerator switchDirection()
     {
         waiting = true;
-        print("switch called");
-        targetPosition = (targetPosition == leftMostV) ? rightMostV : leftMostV;
-        yield return new WaitForSeconds(0.5f);
+        targetPosition = (targetPosition == startPos) ? endPos : startPos;
+        yield return new WaitForSeconds(0.2f);
         waiting = false;
     }
 }
