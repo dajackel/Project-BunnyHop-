@@ -71,7 +71,8 @@ public class PlayerScript : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.tag == "Enemy")
+        string collTag = collision.tag;
+        if (collTag == "Enemy")
         {
             if (grounded)
                 return;
@@ -84,6 +85,10 @@ public class PlayerScript : MonoBehaviour
                 if (!audioSource.isPlaying)
                 audioSource.Play();
             }
+        }
+        else if (collTag == "Item")
+        {
+
         }
         else
             lose = true;

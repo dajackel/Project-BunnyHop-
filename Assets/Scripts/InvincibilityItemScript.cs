@@ -5,21 +5,32 @@ using UnityEngine;
 public class InvincibilityItemScript : MonoBehaviour
 {
     private GameObject effectedObject;
-    float duration;
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
+    [SerializeField] float duration;
     void Update()
     {
-        if (duration <= 0){
+        if (effectedObject != null)
+        {
+            effectedObject.GetComponent<SpriteRenderer>().color = HSBColor.ToColor(new HSBColor(Mathf.PingPong(Time.time * 1, 1), 1, 1));
 
+            if (duration <= 0)
+            {
+                effectedObject.GetComponent<SpriteRenderer>().color = Color.white;
+                Destroy(gameObject);
+            }
+            else
+            {
+                duration -= Time.deltaTime;
+            }
         }
-        else{
-            duration-=Time.deltaTime;
-        }
+    }
+
+private void OnTriggerEnter2D(Collider2D collision)
+    {
+        gameObject.GetComponent<Animator>().SetTrigger("Item PickUp");
+        effectedObject = collision.gameObject;
+    }
+    private void hideSprite()
+    {
+        gameObject.GetComponent<SpriteRenderer>().forceRenderingOff = true;
     }
 }
