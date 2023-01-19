@@ -17,7 +17,8 @@ public class MovingPlatformScript : MonoBehaviour
     // Update is called once per frame
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        canMove = false;
+        if (collision.gameObject.GetComponent<Rigidbody2D>().velocity.y <= 0)
+            canMove = false;
     }
     private void OnCollisionExit2D(Collision2D collision)
     {
@@ -27,8 +28,8 @@ public class MovingPlatformScript : MonoBehaviour
     {
         if (!canMove)
             return;
-        transform.position = Vector3.MoveTowards(transform.position, targetPosition, speed * Time.deltaTime);
-        if (!waiting && transform.position == targetPosition)
+        transform.localPosition = Vector3.MoveTowards(transform.localPosition, targetPosition, speed * Time.deltaTime);
+        if (!waiting && transform.localPosition == targetPosition)
             StartCoroutine(switchDirection());
     }
     IEnumerator switchDirection()
