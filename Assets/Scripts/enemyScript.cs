@@ -40,9 +40,6 @@ public class enemyScript : MonoBehaviour
     public void playDeathAudioClip()
     {
         if (!getIsAlive())
-        {
-            print("hit");
             GetComponent<AudioSource>().Play();
-        }
     }
 }

@@ -14,15 +14,13 @@ public class GameManager : MonoBehaviour//, IUnityAdsInitializationListener
     //bool _testMode = true;
     //private string adUnitId;
     public bool paused = false;
-    private float /*timeScale = 1,*/ currentLevelPos = 0;
+    private float /*timeScale = 1,*/ currentLevelPos = 25;
     public GameObject[] levelSection;
     private GameObject lastLevelSpawned;
     [SerializeField] UIManager UI;
     [SerializeField] GameObject lLevelBound, rLevelBound, BLevelBound;
     private bool creatingLevel = false;
 
-    //add opposite to display pretty numbers as highscore
-    private float groundLevel = -3.69f;
     private float maxFallDist = 26.0f;
 
     //Player reference to easily grab height
@@ -30,6 +28,10 @@ public class GameManager : MonoBehaviour//, IUnityAdsInitializationListener
 
     //Enemy prefab for random spawning
     [SerializeField] GameObject enemy;
+
+    private GameObject[] currentLevelSections = new GameObject[5];
+    private int newestLevel = 0;
+
     //player highscore
     public static float highScore, bestHeightThisRun = 0;
     public static GAME_STATE gameState;
@@ -177,7 +179,6 @@ public class GameManager : MonoBehaviour//, IUnityAdsInitializationListener
         UI.pCurrHeight = pHeight;
     }
 
-
     IEnumerator levelGenerator()
     {
         float ENEMY_SPAWN_CHANCE = 25;
@@ -186,7 +187,6 @@ public class GameManager : MonoBehaviour//, IUnityAdsInitializationListener
         int lvlToSpawn = Random.Range(1, levelSection.Length);
         if (lastLevelSpawned == levelSection[lvlToSpawn])
             lvlToSpawn = (lvlToSpawn + 1) % levelSection.Length;
-        //-14 +13
         float spawnVal = Random.Range(1, 100);
         if (spawnVal <= ENEMY_SPAWN_CHANCE)
         {
@@ -199,10 +199,20 @@ public class GameManager : MonoBehaviour//, IUnityAdsInitializationListener
             else
                 curEnemy.GetComponent<Rigidbody2D>().velocity = new Vector2(-enemy.GetComponent<enemyScript>().speed, eRigidBody.velocity.y);
         }
-        Instantiate(levelSection[lvlToSpawn], new Vector3(-1.25f, currentLevelPos, 0), Quaternion.identity);
+         var section =Instantiate(levelSection[lvlToSpawn], new Vector3(-1.25f, currentLevelPos, 0), Quaternion.identity);
         lastLevelSpawned = levelSection[lvlToSpawn];
-        yield return new WaitForSecondsRealtime(3);
+        yield return new WaitForSeconds(5f);
+        StartCoroutine(CleanUp(section));
         creatingLevel = false;
+    }
+    IEnumerator CleanUp(GameObject newLevelSection)
+    {
+        yield return new WaitForSeconds(1);
+        if (currentLevelSections[newestLevel] != null)
+            Destroy(currentLevelSections[newestLevel]);
+        currentLevelSections[newestLevel] = newLevelSection;
+        newestLevel = (newestLevel + 1 == currentLevelSections.GetUpperBound(0) + 1) ? 0 : newestLevel + 1;
+
     }
     public void setGameState(GAME_STATE gs)
     {

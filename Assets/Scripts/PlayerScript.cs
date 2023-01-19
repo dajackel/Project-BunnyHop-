@@ -14,37 +14,57 @@ public struct float2
 }
 public class PlayerScript : MonoBehaviour
 {
-    new Rigidbody2D rigidbody;
+    private Rigidbody2D rigidBody;
     public float speed, bounceHeight, currHeight;
     private int extraLives = 0;
     private bool grounded = false, invincible = false;
     public bool lose = false;
     private Animator animator;
     private SpriteRenderer spriteRenderer;
-    [SerializeField] GameObject JumpEffect;
     private BoxCollider2D coll;
     private AudioSource audioSource;
-    [SerializeField] AudioClip bounceSFX;
+
+    private float fallSpeedIncInterval = 15f;
+    private float fallSpeedIncAmount = 0.1f;
+    private float timeSinceFallSpeedInc = 0.0f;
+
     //extra stats
     void Start()
     {
         animator = GetComponent<Animator>();
-        rigidbody = GetComponent<Rigidbody2D>();
+        rigidBody = GetComponent<Rigidbody2D>();
         coll = GetComponent<BoxCollider2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         audioSource = GetComponent<AudioSource>();
+    }
+    private void FixedUpdate()
+    {
+        //increase fall speed based on how long the run has been going
+        if(fallSpeedIncInterval - timeSinceFallSpeedInc <= 0)
+        {
+            timeSinceFallSpeedInc = 0;
+            Time.timeScale += fallSpeedIncAmount;
+        }
+        //and apply while falling (applying at all times lessens jump height)
+        //if (rigidBody.velocity.y < 0)
+        //{
+        //    Time.timeScale = 1 + (fallSpeedIncAmount * (int)(timeSinceFallSpeedInc / fallSpeedIncInterval))*0.1f;
+        //}
+        //else
+        //    rigidBody.gravityScale = 1;
     }
     // Update is called once per frame
     void Update()
     {
         if (Time.timeScale == 0)
             return;
+        timeSinceFallSpeedInc += Time.deltaTime;
         if (invincible)
             if (spriteRenderer.color == Color.white)
                 invincible = false;
 
         setPlayerHeight((transform.position.y + coll.size.y < 0) ? 0 : transform.position.y + coll.size.y);
-        if (rigidbody.velocity.y <= 0)
+        if (rigidBody.velocity.y <= 0)
         { /*player is now fallinng*/
             animator.SetBool("Jumping", false);
             coll.enabled = true;
@@ -58,7 +78,7 @@ public class PlayerScript : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
         //early exit for edge case of hitting platforms perfectly to stop early
-        if (rigidbody.velocity.y > 0)
+        if (rigidBody.velocity.y > 0)
             return;
         //check overlap
         Vector2 pMinMax = new Vector2(coll.bounds.min.x - 0.05f, coll.bounds.max.x + -0.05f);
@@ -66,7 +86,7 @@ public class PlayerScript : MonoBehaviour
         if (pMinMax.x < oMinMax.y && pMinMax.y > oMinMax.x && transform.position.y - 0.6f > collision.collider.bounds.max.y)
         {
             animator.SetBool("Charging", true);
-            rigidbody.velocity = Vector2.zero;
+            rigidBody.velocity = Vector2.zero;
             StartCoroutine(landed());
             grounded = true;
 
@@ -80,10 +100,10 @@ public class PlayerScript : MonoBehaviour
         {
             if (grounded)
                 return;
-            if (rigidbody.velocity.y <= 0)
+            if (rigidBody.velocity.y <= 0)
             {
                 collision.GetComponent<enemyScript>().setIsAlive(false);
-                rigidbody.velocity = new Vector2(rigidbody.velocity.x, bounceHeight - 6);//less height than normal
+                rigidBody.velocity = new Vector2(rigidBody.velocity.x, bounceHeight - 6);//less height than normal
                 animator.SetBool("Jumping", true);  //change sprites
                                                     //play sfx
                 if (!audioSource.isPlaying)
@@ -102,7 +122,7 @@ public class PlayerScript : MonoBehaviour
         {
             if (invincible)
             {
-                rigidbody.velocity = new Vector2(rigidbody.velocity.x, bounceHeight);//less height than normal
+                rigidBody.velocity = new Vector2(rigidBody.velocity.x, bounceHeight);//less height than normal
                 animator.SetBool("Jumping", true);  //change sprites
                                                     //play sfx
                 if (!audioSource.isPlaying)
@@ -127,12 +147,12 @@ public class PlayerScript : MonoBehaviour
         else
         {
             if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
-                rigidbody.velocity = new Vector2(-speed, rigidbody.velocity.y);
+                rigidBody.velocity = new Vector2(-speed, rigidBody.velocity.y);
             else if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
-                rigidbody.velocity = new Vector2(speed, rigidbody.velocity.y);
+                rigidBody.velocity = new Vector2(speed, rigidBody.velocity.y);
 
             if (Input.GetKeyUp(KeyCode.A) || Input.GetKeyUp(KeyCode.LeftArrow) || Input.GetKeyUp(KeyCode.D) || Input.GetKeyUp(KeyCode.RightArrow))
-                rigidbody.velocity = new Vector2(0.0f, rigidbody.velocity.y);
+                rigidBody.velocity = new Vector2(0.0f, rigidBody.velocity.y);
         }
     }
 
@@ -145,7 +165,7 @@ public class PlayerScript : MonoBehaviour
             if (!audioSource.isPlaying)
                 audioSource.Play();
             //jump
-            rigidbody.velocity = new Vector2(rigidbody.velocity.x, bounceHeight);
+            rigidBody.velocity = new Vector2(rigidBody.velocity.x, bounceHeight);
             //change sprites
             animator.SetBool("Charging", false);
             animator.SetBool("Jumping", true);
@@ -194,7 +214,7 @@ public class PlayerScript : MonoBehaviour
         else
         {
             extraLives--;
-            rigidbody.velocity = new Vector2(rigidbody.velocity.x, bounceHeight);
+            rigidBody.velocity = new Vector2(rigidBody.velocity.x, bounceHeight);
             animator.SetBool("Jumping", true);  //change sprites
                                                 //play sfx
             if (!audioSource.isPlaying)
