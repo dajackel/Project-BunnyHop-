@@ -18,9 +18,7 @@ public class InvincibilityItemScript : MonoBehaviour
                 Destroy(gameObject);
             }
             else
-            {
                 duration -= Time.deltaTime;
-            }
         }
     }
 
@@ -33,6 +31,7 @@ public class InvincibilityItemScript : MonoBehaviour
         }
         gameObject.GetComponent<Animator>().SetTrigger("Item PickUp");
         effectedObject = collision.gameObject;
+        transform.parent = null;
     }
     private void hideSprite()
     {

@@ -85,7 +85,7 @@ public class UIManager : MonoBehaviour
         if (extraLifeCount <= 0)
         {
             lossUIImages[2].interactable = false;
-            Color tempColor= lossText[2].faceColor;
+            Color tempColor = lossText[2].faceColor;
             tempColor.a = 50;
             lossText[2].faceColor = tempColor;
         }

@@ -40,7 +40,7 @@ public class PlayerScript : MonoBehaviour
     private void FixedUpdate()
     {
         //increase fall speed based on how long the run has been going
-        if(fallSpeedIncInterval - timeSinceFallSpeedInc <= 0)
+        if (fallSpeedIncInterval - timeSinceFallSpeedInc <= 0)
         {
             timeSinceFallSpeedInc = 0;
             Time.timeScale += fallSpeedIncAmount;
@@ -112,9 +112,14 @@ public class PlayerScript : MonoBehaviour
         }
         else if (collTag == "Item")
         {
-            string itemName = collision.name;
+            //items are prefabs - remove clone addendum
+            string itemName = collision.name.Substring(0, collision.name.Length - 7);
             if (itemName == "InvincibilityPowerUp")
+            {
+                //to avoid race set color
+                spriteRenderer.color = Color.gray;
                 invincible = true;
+            }
             if (itemName == "ExtraLifePowerUp")
                 extraLives++;
         }

@@ -16,6 +16,7 @@ public class GameManager : MonoBehaviour//, IUnityAdsInitializationListener
     public bool paused = false;
     private float /*timeScale = 1,*/ currentLevelPos = 25;
     public GameObject[] levelSection;
+    public GameObject[] powerUps;
     private GameObject lastLevelSpawned;
     [SerializeField] UIManager UI;
     [SerializeField] GameObject lLevelBound, rLevelBound, BLevelBound;
@@ -182,6 +183,10 @@ public class GameManager : MonoBehaviour//, IUnityAdsInitializationListener
     IEnumerator levelGenerator()
     {
         float ENEMY_SPAWN_CHANCE = 25;
+        float extraLifeChance = 5f,
+            invincibilityChance = 20f;
+        GameObject spawnedSection = null;
+        GameObject chosenItem = null;
         creatingLevel = true;
         currentLevelPos += 25;
         int lvlToSpawn = Random.Range(1, levelSection.Length);
@@ -199,20 +204,51 @@ public class GameManager : MonoBehaviour//, IUnityAdsInitializationListener
             else
                 curEnemy.GetComponent<Rigidbody2D>().velocity = new Vector2(-enemy.GetComponent<enemyScript>().speed, eRigidBody.velocity.y);
         }
-         var section =Instantiate(levelSection[lvlToSpawn], new Vector3(-1.25f, currentLevelPos, 0), Quaternion.identity);
+        spawnedSection = Instantiate(levelSection[lvlToSpawn], new Vector3(-1.25f, currentLevelPos, 0), Quaternion.identity);
         lastLevelSpawned = levelSection[lvlToSpawn];
-        yield return new WaitForSeconds(5f);
-        StartCoroutine(CleanUp(section));
+        //level section spawned, items spawn next
+        //item[0] = extra life, item[1] = invincibility
+        float itemSelection = Random.Range(1, 100);
+        if (itemSelection <= extraLifeChance)
+        {
+            //choose extra life
+            chosenItem = powerUps[0];
+        }
+        else if (itemSelection <= invincibilityChance)
+        {
+            //choose invincibility
+            chosenItem = powerUps[1];
+        }
+        if (chosenItem != null)
+        {
+            //find viable position within level section just spawned
+            Transform[] objInLvl = spawnedSection.GetComponentsInChildren<Transform>();
+            //select random platform
+            int platform = Random.Range(1, objInLvl.Length);
+
+            //instantiate item slightly above chosen platform
+            Vector3 pos = new Vector3(objInLvl[platform].position.x, objInLvl[platform].position.y + 2, objInLvl[platform].position.z);
+            GameObject spawnedItem = Instantiate(chosenItem, pos, Quaternion.identity);
+            spawnedItem.transform.parent = objInLvl[platform].transform.parent;
+
+        }
+        yield return new WaitForSeconds(4f);
+
+        StartCoroutine(CleanUp(spawnedSection));
         creatingLevel = false;
     }
     IEnumerator CleanUp(GameObject newLevelSection)
     {
-        yield return new WaitForSeconds(1);
+
         if (currentLevelSections[newestLevel] != null)
+        {
+            yield return new WaitUntil(() => currentLevelSections[newestLevel].transform.position.y <= player.transform.position.y - 45);
+            //yield return new WaitForSeconds(3);
             Destroy(currentLevelSections[newestLevel]);
+        }
         currentLevelSections[newestLevel] = newLevelSection;
         newestLevel = (newestLevel + 1 == currentLevelSections.GetUpperBound(0) + 1) ? 0 : newestLevel + 1;
-
+        yield return null;
     }
     public void setGameState(GAME_STATE gs)
     {
@@ -233,6 +269,7 @@ public class GameManager : MonoBehaviour//, IUnityAdsInitializationListener
                 break;
             case GAME_STATE.GAME_CONTINUE:
                 player.useExtraLife();
+                player.transform.position = new Vector3(player.transform.position.x, BLevelBound.transform.position.y + 0.2f, player.transform.position.z);
                 player.lose = false;
                 UI.lossScreenTrigger();
                 setGameState(GAME_STATE.GAME_RUNNING);
