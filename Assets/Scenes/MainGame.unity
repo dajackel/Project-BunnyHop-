@@ -1883,7 +1883,6 @@ MonoBehaviour:
   masterMixer: {fileID: 24100000, guid: 8edf6ed5738c317418941645843d7234, type: 2}
   AudioOn: {fileID: 1087111933, guid: b9c8b8a88b05bed47ab299c58504a9d6, type: 3}
   AudioOff: {fileID: -2141816163, guid: b9c8b8a88b05bed47ab299c58504a9d6, type: 3}
-  PressedButtonSprite: {fileID: 21300016, guid: 1eaee135ce037439d925cee5e41ce026, type: 3}
   playerCurrHeight: {fileID: 679587715}
   playerHighScore: {fileID: 1144791444}
   pCurrHeight: 0
