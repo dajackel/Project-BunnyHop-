@@ -15,10 +15,10 @@ public class UIManager : MonoBehaviour
     [SerializeField] AudioMixer masterMixer;
     private float maxVol;
     private bool isAudioOn;
-    [SerializeField] Sprite AudioOn, AudioOff, PressedButtonSprite;
+    [SerializeField] Sprite AudioOn, AudioOff;
     [SerializeField] GameObject playerCurrHeight, playerHighScore;
     TextMeshPro pHeightText, pHighScoreText;
-    public float pCurrHeight, pHighScore;
+    public float pCurrHeight, pHighScore, bestHeightThisRun;
     public int extraLifeCount = 0;
 
     private void Start()
@@ -28,7 +28,9 @@ public class UIManager : MonoBehaviour
     }
     private void Update()
     {
-        pHeightText.text = pCurrHeight.ToString("0.000");
+        if(GameManager.bestHeightThisRun> bestHeightThisRun)
+            bestHeightThisRun=GameManager.bestHeightThisRun;
+        pHeightText.text = bestHeightThisRun.ToString("0.000");
     }
     public void TogglePauseMenu()
     {
@@ -66,7 +68,7 @@ public class UIManager : MonoBehaviour
         GameManager.setGameState(GameManager.GAME_STATE.GAME_RESTART);
     }
 
-    public void updateHighScore(float hs) { pHighScore = hs; pHighScoreText.text = pHighScore.ToString("0.000"); }
+    public void updateHighScore(float hs) { pHighScore = hs; pHighScoreText.text = "Highscore: "+ pHighScore.ToString("0.000"); }
 
     public void lossScreenTrigger()
     {
@@ -78,7 +80,7 @@ public class UIManager : MonoBehaviour
         //0 == highscore, 1 == best height this run, 2 == extra life count
         TextMeshProUGUI[] lossText = LossWindow.GetComponentsInChildren<TextMeshProUGUI>();
         lossText[0].text = "HighScore\n" + pHighScoreText.text;
-        lossText[1].text = "Best Height This Run\n" + GameManager.bestHeightThisRun.ToString("0.000");
+        lossText[1].text = "Best Height This Run\n" + bestHeightThisRun.ToString("0.000");
         lossText[2].text = "x" + extraLifeCount.ToString();
         //0 == restart, 1 == backtomenu, 2 == extralife
         Button[] lossUIImages = LossWindow.GetComponentsInChildren<Button>();

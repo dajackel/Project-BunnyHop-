@@ -14,7 +14,7 @@ public class GameManager : MonoBehaviour//, IUnityAdsInitializationListener
     //bool _testMode = true;
     //private string adUnitId;
     public bool paused = false;
-    private float /*timeScale = 1,*/ currentLevelPos = 25;
+    private float timescaleAtLose=0, currentLevelPos = 25;
     public GameObject[] levelSection;
     public GameObject[] powerUps;
     private GameObject lastLevelSpawned;
@@ -262,6 +262,7 @@ public class GameManager : MonoBehaviour//, IUnityAdsInitializationListener
                 Time.timeScale = 0;
                 break;
             case GAME_STATE.GAME_OVER:
+                timescaleAtLose = Time.timeScale;
                 UI.extraLifeCount = player.getExtraLifeCount();
                 Time.timeScale = 0;
                 PlayerPrefs.Save();
@@ -273,6 +274,7 @@ public class GameManager : MonoBehaviour//, IUnityAdsInitializationListener
                 player.lose = false;
                 UI.lossScreenTrigger();
                 setGameState(GAME_STATE.GAME_RUNNING);
+                Time.timeScale = timescaleAtLose;
                 break;
             case GAME_STATE.MAIN_MENU:
                 PlayerPrefs.Save();

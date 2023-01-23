@@ -18,7 +18,7 @@ public class InvincibilityItemScript : MonoBehaviour
                 Destroy(gameObject);
             }
             else
-                duration -= Time.deltaTime;
+                duration -= Time.unscaledDeltaTime;
         }
     }
 
