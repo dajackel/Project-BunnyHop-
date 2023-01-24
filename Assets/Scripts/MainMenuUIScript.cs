@@ -8,6 +8,8 @@ public class MainMenuUIScript : MonoBehaviour
 {
     [SerializeField] AudioMixer mixer;
     [SerializeField] Sprite audioON,audioOFF;
+    [SerializeField] GameObject resetScoreWindow;
+    [SerializeField] Button resetScorebutton;
     public void playGame()
     {
         UnityEngine.SceneManagement.SceneManager.LoadScene("MainGame");
@@ -25,10 +27,20 @@ public class MainMenuUIScript : MonoBehaviour
     }
     public void TriggerHighscoreResetWindow()
     {
-
+        Time.timeScale = 0f;
+        resetScoreWindow.SetActive(true);
+        resetScorebutton.interactable = false;
     }
     public void ResetHighScore()
     {
+        Time.timeScale = 1.0f;
         PlayerPrefs.DeleteKey("HighScore");
+    }
+    public void CancelReset()
+    {
+        Time.timeScale = 1.0f;
+        resetScoreWindow.SetActive(false);
+        resetScorebutton.interactable = true;
+
     }
 }
