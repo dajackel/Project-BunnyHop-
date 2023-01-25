@@ -44,7 +44,7 @@ public class PlayerScript : MonoBehaviour
         if (fallSpeedIncInterval - timeSinceFallSpeedInc <= 0)
         {
             timeSinceFallSpeedInc = 0;
-            Time.timeScale += fallSpeedIncAmount;
+            Time.timeScale = (Time.timeScale * fallSpeedIncAmount>=2)?Time.timeScale: Time.timeScale+fallSpeedIncAmount;
         }
     }
     // Update is called once per frame

@@ -15,7 +15,7 @@ public class InvincibilityItemScript : MonoBehaviour
     {
         if (effectedObject != null)
         {
-            effectedObject.GetComponent<SpriteRenderer>().color = HSBColor.ToColor(new HSBColor(Mathf.PingPong(Time.time * 1, 1), 1, 1));
+            effectedObject.GetComponent<SpriteRenderer>().color = HSBColor.ToColor(new HSBColor(Mathf.PingPong(Time.unscaledTime * 1, 1), 1, 1));
 
             if (duration <= 0)
             {

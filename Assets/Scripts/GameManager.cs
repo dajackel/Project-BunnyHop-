@@ -21,6 +21,8 @@ public class GameManager : MonoBehaviour//, IUnityAdsInitializationListener
     [SerializeField] UIManager UI;
     [SerializeField] GameObject lLevelBound, rLevelBound, BLevelBound;
     private bool creatingLevel = false;
+    float backgroundColorChangeVal = 0;
+    int nextColorChange = 500;
 
     private float maxFallDist = 26.0f;
 
@@ -178,10 +180,18 @@ public class GameManager : MonoBehaviour//, IUnityAdsInitializationListener
             PlayerPrefs.SetFloat("highScore", highScore);
         }
         UI.pCurrHeight = pHeight;
+        if (currentLevelPos >= nextColorChange)
+        {
+            nextColorChange += nextColorChange;
+            backgroundColorChangeVal += 0.01f;
+            print("Color change");
+        }
     }
 
     IEnumerator levelGenerator()
     {
+        if (currentLevelPos >= player.getPlayerHeight() + 100)
+            yield return new WaitUntil(() => currentLevelPos <= player.getPlayerHeight() + 100);
         float ENEMY_SPAWN_CHANCE = 25;
         float extraLifeChance = 5f,
             invincibilityChance = 20f;
@@ -189,9 +199,17 @@ public class GameManager : MonoBehaviour//, IUnityAdsInitializationListener
         GameObject chosenItem = null;
         creatingLevel = true;
         currentLevelPos += 25;
+        //spawn level section
         int lvlToSpawn = Random.Range(1, levelSection.Length);
         if (lastLevelSpawned == levelSection[lvlToSpawn])
             lvlToSpawn = (lvlToSpawn + 1) % levelSection.Length;
+        spawnedSection = Instantiate(levelSection[lvlToSpawn], new Vector3(-1.25f, currentLevelPos, 0), Quaternion.identity);
+        lastLevelSpawned = levelSection[lvlToSpawn];
+
+        //color background by height
+        spawnedSection.GetComponentsInChildren<SpriteRenderer>()[0].color = Color.Lerp(spawnedSection.GetComponentsInChildren<SpriteRenderer>()[0].color, Color.black, backgroundColorChangeVal);
+
+        //spawn enemies
         float spawnVal = Random.Range(1, 100);
         if (spawnVal <= ENEMY_SPAWN_CHANCE)
         {
@@ -204,17 +222,16 @@ public class GameManager : MonoBehaviour//, IUnityAdsInitializationListener
             else
                 curEnemy.GetComponent<Rigidbody2D>().velocity = new Vector2(-enemy.GetComponent<enemyScript>().speed, eRigidBody.velocity.y);
         }
-        spawnedSection = Instantiate(levelSection[lvlToSpawn], new Vector3(-1.25f, currentLevelPos, 0), Quaternion.identity);
-        lastLevelSpawned = levelSection[lvlToSpawn];
-        //level section spawned, items spawn next
+
+        //spawn items
         //item[0] = extra life, item[1] = invincibility
-        float itemSelection = Random.Range(1, 100);
-        if (itemSelection <= extraLifeChance)
+        spawnVal = Random.Range(1, 100);
+        if (spawnVal <= extraLifeChance)
         {
             //choose extra life
             chosenItem = powerUps[0];
         }
-        else if (itemSelection <= invincibilityChance)
+        else if (spawnVal <= invincibilityChance)
         {
             //choose invincibility
             chosenItem = powerUps[1];
@@ -230,7 +247,6 @@ public class GameManager : MonoBehaviour//, IUnityAdsInitializationListener
             Vector3 pos = new Vector3(objInLvl[platform].position.x, objInLvl[platform].position.y + 2, objInLvl[platform].position.z);
             GameObject spawnedItem = Instantiate(chosenItem, pos, Quaternion.identity);
             spawnedItem.transform.parent = objInLvl[platform].transform.parent;
-
         }
         yield return new WaitForSeconds(4f);
 
@@ -269,9 +285,9 @@ public class GameManager : MonoBehaviour//, IUnityAdsInitializationListener
                 UI.lossScreenTrigger();
                 break;
             case GAME_STATE.GAME_CONTINUE:
-                player.useExtraLife();
                 player.transform.position = new Vector3(player.transform.position.x, BLevelBound.transform.position.y + 0.2f, player.transform.position.z);
                 player.lose = false;
+                player.useExtraLife();
                 UI.lossScreenTrigger();
                 setGameState(GAME_STATE.GAME_RUNNING);
                 Time.timeScale = timescaleAtLose;
