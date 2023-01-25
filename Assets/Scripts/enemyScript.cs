@@ -7,6 +7,7 @@ public class enemyScript : MonoBehaviour
     // Start is called before the first frame update
     private Rigidbody2D rigidBody;
     private Animator animator;
+    private AudioSource audioSource;
     public float speed = 3.0f,
         lifetime = 10.0f;
     private bool isAlive = true;
@@ -14,6 +15,7 @@ public class enemyScript : MonoBehaviour
     {
         rigidBody = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
+        audioSource = GetComponent<AudioSource>();
     }
     private void Update()
     {
@@ -40,6 +42,6 @@ public class enemyScript : MonoBehaviour
     public void playDeathAudioClip()
     {
         if (!getIsAlive())
-            GetComponent<AudioSource>().Play();
+            audioSource.Play();
     }
 }

@@ -21,7 +21,7 @@ public class HoverScript : MonoBehaviour
     {
         if (!canMove)
             return;
-        transform.position = Vector3.MoveTowards(transform.position, targetPos, speed * Time.deltaTime);
+        transform.position = Vector3.MoveTowards(transform.position, targetPos, speed * Time.unscaledDeltaTime);
         if (transform.position == targetPos)
             StartCoroutine(switchDirection());
     }

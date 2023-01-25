@@ -14,7 +14,7 @@ public class GameManager : MonoBehaviour//, IUnityAdsInitializationListener
     //bool _testMode = true;
     //private string adUnitId;
     public bool paused = false;
-    private float timescaleAtLose=0, currentLevelPos = 25;
+    private float timescaleAtLose = 0, currentLevelPos = 25;
     public GameObject[] levelSection;
     public GameObject[] powerUps;
     private GameObject lastLevelSpawned;
@@ -277,6 +277,7 @@ public class GameManager : MonoBehaviour//, IUnityAdsInitializationListener
                 Time.timeScale = timescaleAtLose;
                 break;
             case GAME_STATE.MAIN_MENU:
+                Time.timeScale = 1;
                 PlayerPrefs.Save();
                 SceneManager.LoadScene("MainMenu");
                 break;
@@ -288,10 +289,6 @@ public class GameManager : MonoBehaviour//, IUnityAdsInitializationListener
                 Time.timeScale = 1.0f;
                 SceneManager.LoadScene("MainGame");
                 break;
-            case GAME_STATE.GAME_START:
-                SceneManager.LoadScene("MainGame");
-                break;
-
         }
     }
     public GAME_STATE getGameState() { return gameState; }

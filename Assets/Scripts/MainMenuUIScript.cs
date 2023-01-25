@@ -34,6 +34,7 @@ public class MainMenuUIScript : MonoBehaviour
     public void ResetHighScore()
     {
         Time.timeScale = 1.0f;
+        resetScoreWindow.SetActive(false);
         PlayerPrefs.DeleteKey("HighScore");
     }
     public void CancelReset()

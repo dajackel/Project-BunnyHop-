@@ -17,7 +17,7 @@ public class PlayerScript : MonoBehaviour
     private Rigidbody2D rigidBody;
     public float speed, bounceHeight, currHeight;
     private int extraLives = 0;
-    private bool grounded = false, invincible = false;
+    private bool grounded = true, invincible = false;
     public bool lose = false;
     private Animator animator;
     private SpriteRenderer spriteRenderer;
@@ -29,6 +29,7 @@ public class PlayerScript : MonoBehaviour
     private float timeSinceFallSpeedInc = 0.0f;
 
     //extra stats
+
     void Start()
     {
         animator = GetComponent<Animator>();
@@ -45,13 +46,6 @@ public class PlayerScript : MonoBehaviour
             timeSinceFallSpeedInc = 0;
             Time.timeScale += fallSpeedIncAmount;
         }
-        //and apply while falling (applying at all times lessens jump height)
-        //if (rigidBody.velocity.y < 0)
-        //{
-        //    Time.timeScale = 1 + (fallSpeedIncAmount * (int)(timeSinceFallSpeedInc / fallSpeedIncInterval))*0.1f;
-        //}
-        //else
-        //    rigidBody.gravityScale = 1;
     }
     // Update is called once per frame
     void Update()
@@ -64,7 +58,7 @@ public class PlayerScript : MonoBehaviour
                 invincible = false;
 
         setPlayerHeight((transform.position.y + coll.size.y < 0) ? 0 : transform.position.y + coll.size.y);
-        if (rigidBody.velocity.y <= 0)
+        if (rigidBody.velocity.y <= 0 && !grounded)
         { /*player is now fallinng*/
             animator.SetBool("Jumping", false);
             coll.enabled = true;
@@ -103,11 +97,7 @@ public class PlayerScript : MonoBehaviour
             if (rigidBody.velocity.y <= 0)
             {
                 collision.GetComponent<enemyScript>().setIsAlive(false);
-                rigidBody.velocity = new Vector2(rigidBody.velocity.x, bounceHeight - 6);//less height than normal
-                animator.SetBool("Jumping", true);  //change sprites
-                                                    //play sfx
-                if (!audioSource.isPlaying)
-                    audioSource.Play();
+                jump(bounceHeight - 6);
             }
         }
         else if (collTag == "Item")
@@ -126,13 +116,7 @@ public class PlayerScript : MonoBehaviour
         else
         {
             if (invincible)
-            {
-                rigidBody.velocity = new Vector2(rigidBody.velocity.x, bounceHeight);//less height than normal
-                animator.SetBool("Jumping", true);  //change sprites
-                                                    //play sfx
-                if (!audioSource.isPlaying)
-                    audioSource.Play();
-            }
+                jump();
             else
                 lose = true;
         }
@@ -146,7 +130,7 @@ public class PlayerScript : MonoBehaviour
                 Touch touch = Input.GetTouch(0);
                 Vector3 targetPos = Camera.main.ScreenToWorldPoint(touch.position);
                 targetPos = new Vector3(targetPos.x, transform.position.y, transform.position.z);
-                transform.position = Vector3.MoveTowards(transform.position, targetPos, 2*speed * Time.deltaTime);
+                transform.position = Vector3.MoveTowards(transform.position, targetPos, 2 * speed * Time.deltaTime);
             }
         }
         else
@@ -166,16 +150,22 @@ public class PlayerScript : MonoBehaviour
         yield return new WaitForSeconds(1);
         if (grounded)
         {
-            //play sfx
-            if (!audioSource.isPlaying)
-                audioSource.Play();
-            //jump
-            rigidBody.velocity = new Vector2(rigidBody.velocity.x, bounceHeight);
             //change sprites
             animator.SetBool("Charging", false);
-            animator.SetBool("Jumping", true);
-            grounded = false;
+            jump();
         }
+    }
+    private void jump(float ovrRideVal = 0)
+    {
+        if (!audioSource.isPlaying)
+            audioSource.PlayOneShot(audioSource.clip);
+        animator.SetBool("Jumping", true);
+        if (ovrRideVal != 0)
+            rigidBody.velocity = new Vector2(rigidBody.velocity.x, ovrRideVal);
+        else
+            rigidBody.velocity = new Vector2(rigidBody.velocity.x, bounceHeight);
+
+        grounded = false;
     }
 
     private void setPlayerHeight(float height) { currHeight = height; }
@@ -219,11 +209,7 @@ public class PlayerScript : MonoBehaviour
         else
         {
             extraLives--;
-            rigidBody.velocity = new Vector2(rigidBody.velocity.x, bounceHeight);
-            animator.SetBool("Jumping", true);  //change sprites
-                                                //play sfx
-            if (!audioSource.isPlaying)
-                audioSource.Play();
+            jump();
         }
     }
 }

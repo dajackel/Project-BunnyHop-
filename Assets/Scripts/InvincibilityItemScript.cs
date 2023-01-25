@@ -6,6 +6,11 @@ public class InvincibilityItemScript : MonoBehaviour
 {
     private GameObject effectedObject;
     [SerializeField] float duration;
+    private AudioSource audioSource;
+    private void Start()
+    {
+        audioSource = GetComponent<AudioSource>();
+    }
     void Update()
     {
         if (effectedObject != null)
@@ -24,23 +29,22 @@ public class InvincibilityItemScript : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (!gameObject.GetComponent<AudioSource>().isPlaying)
+        if (!audioSource.isPlaying&&audioSource.enabled)
         {
-            gameObject.GetComponent<AudioSource>().Play();
+            audioSource.Play();
             StartCoroutine(disableAudio());
         }
         gameObject.GetComponent<Animator>().SetTrigger("Item PickUp");
         effectedObject = collision.gameObject;
         transform.parent = null;
     }
-    private void hideSprite()
+    private void HideSprite()
     {
         gameObject.GetComponent<SpriteRenderer>().forceRenderingOff = true;
     }
     IEnumerator disableAudio()
     {
-        var audio = gameObject.GetComponent<AudioSource>();
-        yield return new WaitUntil(() => audio.isPlaying == false);
-        audio.enabled = false;
+        yield return new WaitUntil(() => audioSource.isPlaying == false);
+        audioSource.enabled = false;
     }
 }

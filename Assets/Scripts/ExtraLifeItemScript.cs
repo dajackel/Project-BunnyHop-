@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ExtraLifeItemScript : MonoBehaviour
 {
-    private AudioSource audioSource;
+   private AudioSource audioSource;
     private void Start()
     {
         audioSource = gameObject.GetComponent<AudioSource>();

@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 7041932208445032880}
   - component: {fileID: 4410296523902419742}
   - component: {fileID: 4794240273809383123}
-  - component: {fileID: 6880191669632797391}
+  - component: {fileID: 191484927864504317}
   m_Layer: 0
   m_Name: Bird
   m_TagString: Enemy
@@ -121,6 +121,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc7d2a268e4bc58499b7b581d611a2d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  speed: 3
+  lifetime: 10
 --- !u!58 &4410296523902419742
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -158,7 +160,7 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
---- !u!82 &6880191669632797391
+--- !u!82 &191484927864504317
 AudioSource:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

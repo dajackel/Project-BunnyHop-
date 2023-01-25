@@ -28,7 +28,7 @@ public class MovingPlatformScript : MonoBehaviour
     {
         if (!canMove)
             return;
-        transform.localPosition = Vector3.MoveTowards(transform.localPosition, targetPosition, speed * Time.deltaTime);
+        transform.localPosition = Vector3.MoveTowards(transform.localPosition, targetPosition, speed * Time.unscaledDeltaTime);
         if (!waiting && transform.localPosition == targetPosition)
             StartCoroutine(switchDirection());
     }
