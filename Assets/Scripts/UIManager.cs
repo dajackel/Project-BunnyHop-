@@ -18,7 +18,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] Sprite AudioOn, AudioOff;
     [SerializeField] GameObject playerCurrHeight, playerHighScore;
     TextMeshPro pHeightText, pHighScoreText;
-    public float pCurrHeight, pHighScore, bestHeightThisRun;
+    public float pHighScore, bestHeightThisRun;
     public int extraLifeCount = 0;
 
     private void Start()
@@ -28,8 +28,8 @@ public class UIManager : MonoBehaviour
     }
     private void Update()
     {
-        if(GameManager.bestHeightThisRun> bestHeightThisRun)
-            bestHeightThisRun=GameManager.bestHeightThisRun;
+        if (GameManager.bestHeightThisRun > bestHeightThisRun)
+            bestHeightThisRun = GameManager.bestHeightThisRun;
         pHeightText.text = bestHeightThisRun.ToString("0.000");
     }
     public void TogglePauseMenu()
@@ -68,7 +68,7 @@ public class UIManager : MonoBehaviour
         GameManager.setGameState(GameManager.GAME_STATE.GAME_RESTART);
     }
 
-    public void updateHighScore(float hs) { pHighScore = hs; pHighScoreText.text = "Highscore: "+ pHighScore.ToString("0.000"); }
+    public void updateHighScore(float hs) { pHighScore = hs; pHighScoreText.text = "Highscore: " + pHighScore.ToString("0.000"); }
 
     public void lossScreenTrigger()
     {

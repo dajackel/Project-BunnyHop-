@@ -44,7 +44,7 @@ public class PlayerScript : MonoBehaviour
         if (fallSpeedIncInterval - timeSinceFallSpeedInc <= 0)
         {
             timeSinceFallSpeedInc = 0;
-            Time.timeScale = (Time.timeScale * fallSpeedIncAmount>=2)?Time.timeScale: Time.timeScale+fallSpeedIncAmount;
+            Time.timeScale = (Time.timeScale * fallSpeedIncAmount >= 2) ? Time.timeScale : Time.timeScale + fallSpeedIncAmount;
         }
     }
     // Update is called once per frame
@@ -155,16 +155,13 @@ public class PlayerScript : MonoBehaviour
             jump();
         }
     }
-    private void jump(float ovrRideVal = 0)
+    public void jump(float ovrRideVal = 0)
     {
         if (!audioSource.isPlaying)
             audioSource.PlayOneShot(audioSource.clip);
         animator.SetBool("Jumping", true);
-        if (ovrRideVal != 0)
-            rigidBody.velocity = new Vector2(rigidBody.velocity.x, ovrRideVal);
-        else
-            rigidBody.velocity = new Vector2(rigidBody.velocity.x, bounceHeight);
-
+        rigidBody.velocity = (ovrRideVal != 0) ? 
+            new Vector2(rigidBody.velocity.x, ovrRideVal) : new Vector2(rigidBody.velocity.x, bounceHeight);
         grounded = false;
     }
 
@@ -204,12 +201,7 @@ public class PlayerScript : MonoBehaviour
     public int getExtraLifeCount() { return extraLives; }
     public void useExtraLife()
     {
-        if (extraLives == 0)
-            Debug.DebugBreak();
-        else
-        {
-            extraLives--;
-            jump();
-        }
+        extraLives--;
+        jump();
     }
 }

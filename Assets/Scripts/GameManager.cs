@@ -27,7 +27,7 @@ public class GameManager : MonoBehaviour//, IUnityAdsInitializationListener
     private float maxFallDist = 26.0f;
 
     //Player reference to easily grab height
-    [SerializeField] PlayerScript player;
+    [SerializeField] GameObject player;
 
     //Enemy prefab for random spawning
     [SerializeField] GameObject enemy;
@@ -152,7 +152,7 @@ public class GameManager : MonoBehaviour//, IUnityAdsInitializationListener
         Time.timeScale = 1.0f;
         highScore = PlayerPrefs.GetFloat("highScore", 0.0f);
         UI.updateHighScore(highScore);
-        BLevelBound.transform.position = new Vector2(BLevelBound.transform.position.x, player.transform.position.y - maxFallDist);
+        BLevelBound.transform.position = new Vector2(BLevelBound.transform.position.x, -8.4f);
     }
 
     // Update is called once per frame
@@ -160,12 +160,13 @@ public class GameManager : MonoBehaviour//, IUnityAdsInitializationListener
     {
         if (Time.timeScale == 0)
             return;
-        if (player.lose == true || BLevelBound.transform.position.y >= player.transform.position.y)
+        PlayerScript pScript = player.GetComponent<PlayerScript>();
+        if (pScript.lose == true || BLevelBound.transform.position.y >= player.transform.position.y)
             setGameState(GAME_STATE.GAME_OVER);
         if (!creatingLevel)
             StartCoroutine(levelGenerator());
         //top of player's head position
-        float pHeight = player.getPlayerHeight();
+        float pHeight = player.transform.position.y/* + player.GetComponent<BoxCollider2D>().size.y / 2*/;
         lLevelBound.transform.position = new Vector3(lLevelBound.transform.position.x, pHeight, lLevelBound.transform.position.z);
         rLevelBound.transform.position = new Vector3(rLevelBound.transform.position.x, pHeight, rLevelBound.transform.position.z);
 
@@ -179,19 +180,19 @@ public class GameManager : MonoBehaviour//, IUnityAdsInitializationListener
             UI.updateHighScore(highScore);
             PlayerPrefs.SetFloat("highScore", highScore);
         }
-        UI.pCurrHeight = pHeight;
+        UI.bestHeightThisRun = bestHeightThisRun;
         if (currentLevelPos >= nextColorChange)
         {
             nextColorChange += nextColorChange;
             backgroundColorChangeVal += 0.01f;
-            print("Color change");
         }
     }
 
     IEnumerator levelGenerator()
     {
-        if (currentLevelPos >= player.getPlayerHeight() + 100)
-            yield return new WaitUntil(() => currentLevelPos <= player.getPlayerHeight() + 100);
+        float pHeight = player.transform.position.y + player.GetComponent<BoxCollider2D>().size.y / 2;
+        if (currentLevelPos >= pHeight + 100)
+            yield return new WaitUntil(() => currentLevelPos <= pHeight + 100);
         float ENEMY_SPAWN_CHANCE = 25;
         float extraLifeChance = 5f,
             invincibilityChance = 20f;
@@ -215,7 +216,7 @@ public class GameManager : MonoBehaviour//, IUnityAdsInitializationListener
         {
             //Enemy needs to spawn
             bool leftOrRightSide = (spawnVal % 2 == 0) ? true : false;
-            GameObject curEnemy = Instantiate(enemy, new Vector3((leftOrRightSide) ? -14 : 13, Random.Range(player.getPlayerHeight(), player.getPlayerHeight() + 25), 0), (leftOrRightSide) ? Quaternion.identity : Quaternion.Euler(0, 180, 0));
+            GameObject curEnemy = Instantiate(enemy, new Vector3((leftOrRightSide) ? -14 : 13, Random.Range(pHeight, pHeight + 25), 0), (leftOrRightSide) ? Quaternion.identity : Quaternion.Euler(0, 180, 0));
             Rigidbody2D eRigidBody = curEnemy.GetComponent<Rigidbody2D>();
             if (leftOrRightSide)
                 curEnemy.GetComponent<Rigidbody2D>().velocity = new Vector2(enemy.GetComponent<enemyScript>().speed, eRigidBody.velocity.y);
@@ -255,7 +256,6 @@ public class GameManager : MonoBehaviour//, IUnityAdsInitializationListener
     }
     IEnumerator CleanUp(GameObject newLevelSection)
     {
-
         if (currentLevelSections[newestLevel] != null)
         {
             yield return new WaitUntil(() => currentLevelSections[newestLevel].transform.position.y <= player.transform.position.y - 45);
@@ -279,15 +279,16 @@ public class GameManager : MonoBehaviour//, IUnityAdsInitializationListener
                 break;
             case GAME_STATE.GAME_OVER:
                 timescaleAtLose = Time.timeScale;
-                UI.extraLifeCount = player.getExtraLifeCount();
+                UI.extraLifeCount = player.GetComponent<PlayerScript>().getExtraLifeCount();
                 Time.timeScale = 0;
                 PlayerPrefs.Save();
                 UI.lossScreenTrigger();
                 break;
             case GAME_STATE.GAME_CONTINUE:
                 player.transform.position = new Vector3(player.transform.position.x, BLevelBound.transform.position.y + 0.2f, player.transform.position.z);
-                player.lose = false;
-                player.useExtraLife();
+                var pScript = player.GetComponent<PlayerScript>();
+                pScript.lose = false;
+                pScript.useExtraLife();
                 UI.lossScreenTrigger();
                 setGameState(GAME_STATE.GAME_RUNNING);
                 Time.timeScale = timescaleAtLose;

@@ -11,19 +11,20 @@ public class ControlScoreHeights : MonoBehaviour
     {
         manager = GetComponent<UIManager>();
         Vector3 pos = highscore.transform.position;
-        highscore.transform.position = new Vector3 (pos.x, manager.pHighScore, pos.z);
+        highscore.transform.position = new Vector3(pos.x, manager.pHighScore, pos.z);
         pos = playerHeight.transform.position;
-        playerHeight.transform.position = new Vector3 (pos.x, manager.bestHeightThisRun, pos.z);
+        playerHeight.transform.position = new Vector3(pos.x, manager.bestHeightThisRun-0.8f, pos.z);
     }
 
     // Update is called once per frame
     void Update()
     {
         Vector3 pos = playerHeight.transform.position;
-        playerHeight.transform.position = new Vector3(pos.x, manager.bestHeightThisRun, pos.z);
-        if (playerHeight.transform.position.y > highscore.transform.position.y) {
+        playerHeight.transform.position = new Vector3(pos.x, manager.bestHeightThisRun-0.8f, pos.z);
+        if (playerHeight.transform.position.y > highscore.transform.position.y)
+        {
             highscore.transform.position = new Vector3(pos.x, pos.y, pos.z);
-            if(playerHeight.activeSelf)
+            if (playerHeight.activeSelf)
                 playerHeight.SetActive(false);
         }
     }
