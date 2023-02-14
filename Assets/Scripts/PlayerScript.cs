@@ -16,7 +16,7 @@ public class PlayerScript : MonoBehaviour
 {
     private Rigidbody2D rigidBody;
     public float speed, bounceHeight, currHeight;
-    private int extraLives = 0;
+    public int extraLives = 0;
     private bool grounded = true, invincible = false;
     public bool lose = false;
     private Animator animator;
@@ -110,8 +110,6 @@ public class PlayerScript : MonoBehaviour
                 spriteRenderer.color = Color.gray;
                 invincible = true;
             }
-            if (itemName == "ExtraLifePowerUp")
-                extraLives++;
         }
         else
         {
