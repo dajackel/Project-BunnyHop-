@@ -16,6 +16,8 @@ public class GameManager : MonoBehaviour//, IUnityAdsInitializationListener
     private bool creatingLevel = false;
     float backgroundColorChangeVal = 0;
     int nextColorChange = 500;
+    private AudioSource backgroundMusic;
+    private AudioSource lossSFX;
 
     private float maxFallDist = 26.0f;
 
@@ -46,6 +48,8 @@ public class GameManager : MonoBehaviour//, IUnityAdsInitializationListener
 
     void Start()
     {
+        backgroundMusic = Camera.main.GetComponents<AudioSource>()[0];
+        lossSFX = Camera.main.GetComponents<AudioSource>()[1];
         gameState = GAME_STATE.GAME_RUNNING;
         Time.timeScale = 1.0f;
         highScore = PlayerPrefs.GetFloat("highScore", 0.0f);
@@ -170,12 +174,18 @@ public class GameManager : MonoBehaviour//, IUnityAdsInitializationListener
         switch (gameState)
         {
             case GAME_STATE.GAME_RUNNING:
+                backgroundMusic.volume = 0.3f;
+                backgroundMusic.UnPause();
                 Time.timeScale = 1;
                 break;
             case GAME_STATE.GAME_PAUSED:
+                backgroundMusic.volume = 0.15f;
                 Time.timeScale = 0;
                 break;
             case GAME_STATE.GAME_OVER:
+                lossSFX.Play();
+                backgroundMusic.volume = 0.15f;
+                backgroundMusic.Pause();
                 timescaleAtLose = Time.timeScale;
                 UI.extraLifeCount = player.GetComponent<PlayerScript>().getExtraLifeCount();
                 Time.timeScale = 0;
@@ -183,6 +193,10 @@ public class GameManager : MonoBehaviour//, IUnityAdsInitializationListener
                 UI.lossScreenTrigger();
                 break;
             case GAME_STATE.GAME_CONTINUE:
+                if (lossSFX.isPlaying)
+                    lossSFX.Stop();
+                backgroundMusic.volume = 0.3f;
+                backgroundMusic.UnPause();
                 player.transform.position = new Vector3(player.transform.position.x, BLevelBound.transform.position.y + 0.2f, player.transform.position.z);
                 var pScript = player.GetComponent<PlayerScript>();
                 pScript.lose = false;

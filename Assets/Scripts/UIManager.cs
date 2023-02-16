@@ -12,6 +12,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] GameObject ConfirmWindow;
     [SerializeField] GameObject LossWindow;
     [SerializeField] Button AudioButton;
+    [SerializeField] Button RewardedAdButton;
     [SerializeField] AudioMixer masterMixer;
     private float maxVol;
     private bool isAudioOn;
@@ -90,6 +91,7 @@ public class UIManager : MonoBehaviour
             Color tempColor = lossText[2].faceColor;
             tempColor.a = 50;
             lossText[2].faceColor = tempColor;
+            RewardedAdButton.gameObject.SetActive(true);
         }
         else
         {
