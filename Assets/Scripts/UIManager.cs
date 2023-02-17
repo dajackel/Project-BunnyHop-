@@ -28,6 +28,7 @@ public class UIManager : MonoBehaviour
     private float fadeTime = 0;
     private float fadeDuration = 10f;
 
+
     private void Start()
     {
         audioSource = GetComponent<AudioSource>();
@@ -38,14 +39,16 @@ public class UIManager : MonoBehaviour
     {
         if (changeLevel)
         {
-
             fadeTime += Time.unscaledDeltaTime;
             if (levelFade.color.a < 1)
             {
                 levelFade.color = Color.Lerp(levelFade.color, Color.black, fadeTime / fadeDuration);
             }
             else
+            {
+                audioSource.Stop();
                 GameManager.setGameState(GameManager.GAME_STATE.MAIN_MENU);
+            }
         }
 
         if (GameManager.bestHeightThisRun > bestHeightThisRun)
@@ -60,11 +63,11 @@ public class UIManager : MonoBehaviour
         GameManager.setGameState((GameManager.getGameState() == GameManager.GAME_STATE.GAME_RUNNING) ? GameManager.GAME_STATE.GAME_PAUSED : GameManager.GAME_STATE.GAME_RUNNING);
         PauseMenu.SetActive(!PauseMenu.activeSelf);
     }
-    //public void ToggleConfirmWindow()
-    //{
-    //    audioSource.Play();
-    //    ConfirmWindow.SetActive(!ConfirmWindow.activeSelf);
-    //}
+    public void ToggleConfirmWindow()
+    {
+        audioSource.Play();
+        ConfirmWindow.SetActive(!ConfirmWindow.activeSelf);
+    }
     //public void ConfirmSettings()
     //{
     //    //master volume settings PlayerPrefs.SetFloat("MasterVolume",x);
@@ -86,6 +89,7 @@ public class UIManager : MonoBehaviour
     {
         audioSource.Play();
         changeLevel = true;
+        disableButtons();
     }
     public void restartGame()
     {
@@ -128,5 +132,15 @@ public class UIManager : MonoBehaviour
     public void Continue()
     {
         GameManager.setGameState(GameManager.GAME_STATE.GAME_CONTINUE);
+    }
+
+
+    private void disableButtons()
+    {
+        Button[] buttons = FindObjectsOfType<Button>();
+        foreach (Button btn in buttons)
+        {
+            btn.interactable = false;
+        }
     }
 }

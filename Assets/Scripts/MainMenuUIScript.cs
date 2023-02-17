@@ -16,6 +16,7 @@ public class MainMenuUIScript : MonoBehaviour
     private float fadeDuration = 10f;
     public void playGame()
     {
+        disableButtons();
         GetComponent<AudioSource>().Play();
         changeLevel = true;
     }
@@ -65,4 +66,12 @@ public class MainMenuUIScript : MonoBehaviour
 
     }
 
+    private void disableButtons()
+    {
+        Button[] buttons = FindObjectsOfType<Button>();
+        foreach (Button btn in buttons)
+        {
+            btn.interactable = false;
+        }
+    }
 }
