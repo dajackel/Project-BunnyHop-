@@ -7,19 +7,39 @@ using UnityEngine.UI;
 public class MainMenuUIScript : MonoBehaviour
 {
     [SerializeField] AudioMixer mixer;
-    [SerializeField] Sprite audioON,audioOFF;
+    [SerializeField] Sprite audioON, audioOFF;
     [SerializeField] GameObject resetScoreWindow;
     [SerializeField] Button resetScorebutton;
+    [SerializeField] Image levelFade;
+    private bool changeLevel = false;
+    private float fadeTime = 0;
+    private float fadeDuration = 10f;
     public void playGame()
     {
-        UnityEngine.SceneManagement.SceneManager.LoadScene("MainGame");
+        GetComponent<AudioSource>().Play();
+        changeLevel = true;
+    }
+    private void Update()
+    {
+        if (changeLevel)
+        {
+            fadeTime += Time.unscaledDeltaTime;
+            print(levelFade.color.a);
+            if (levelFade.color.a < 1)
+            {
+                levelFade.color = Color.Lerp(levelFade.color, Color.black, fadeTime / fadeDuration);
+                print(levelFade.color.a);
+            }
+            else
+                UnityEngine.SceneManagement.SceneManager.LoadScene("MainGame");
+        }
     }
     public void ToggleAudio()
     {
         float vol;
         mixer.GetFloat("MasterVolume", out vol);
         mixer.SetFloat("MasterVolume", (vol == -80.0f) ? 0.0f : -80.0f);
-            Image audioSprite = GetComponentsInChildren<Image>()[1];
+        Image audioSprite = GetComponentsInChildren<Image>()[1];
         if (vol == 0)
             audioSprite.sprite = audioOFF;
         else
@@ -44,4 +64,5 @@ public class MainMenuUIScript : MonoBehaviour
         resetScorebutton.interactable = true;
 
     }
+
 }

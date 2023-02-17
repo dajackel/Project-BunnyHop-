@@ -14,7 +14,8 @@ public class UIManager : MonoBehaviour
     [SerializeField] Button AudioButton;
     [SerializeField] Button RewardedAdButton;
     [SerializeField] AudioMixer masterMixer;
-    private float maxVol;
+    private AudioSource audioSource;
+    //private float maxVol;
     private bool isAudioOn;
     [SerializeField] Sprite AudioOn, AudioOff;
     [SerializeField] GameObject playerCurrHeight, playerHighScore;
@@ -22,34 +23,54 @@ public class UIManager : MonoBehaviour
     public float pHighScore, bestHeightThisRun;
     public int extraLifeCount = 0;
 
+    [SerializeField] Image levelFade;
+    private bool changeLevel = false;
+    private float fadeTime = 0;
+    private float fadeDuration = 10f;
+
     private void Start()
     {
+        audioSource = GetComponent<AudioSource>();
         pHeightText = playerCurrHeight.GetComponent<TextMeshPro>();
         pHighScoreText = playerHighScore.GetComponent<TextMeshPro>();
     }
     private void Update()
     {
+        if (changeLevel)
+        {
+
+            fadeTime += Time.unscaledDeltaTime;
+            if (levelFade.color.a < 1)
+            {
+                levelFade.color = Color.Lerp(levelFade.color, Color.black, fadeTime / fadeDuration);
+            }
+            else
+                GameManager.setGameState(GameManager.GAME_STATE.MAIN_MENU);
+        }
+
         if (GameManager.bestHeightThisRun > bestHeightThisRun)
             bestHeightThisRun = GameManager.bestHeightThisRun;
         pHeightText.text = bestHeightThisRun.ToString("0.000");
     }
     public void TogglePauseMenu()
     {
+        audioSource.Play();
         if (GameManager.getGameState() == GameManager.GAME_STATE.GAME_OVER)
             return;
         GameManager.setGameState((GameManager.getGameState() == GameManager.GAME_STATE.GAME_RUNNING) ? GameManager.GAME_STATE.GAME_PAUSED : GameManager.GAME_STATE.GAME_RUNNING);
         PauseMenu.SetActive(!PauseMenu.activeSelf);
     }
-    public void ToggleConfirmWindow()
-    {
-        ConfirmWindow.SetActive(!ConfirmWindow.activeSelf);
-    }
-    public void ConfirmSettings()
-    {
-        //master volume settings PlayerPrefs.SetFloat("MasterVolume",x);
-        //sfxvolume settings PlayerPrefs.SetFloat("SfxVolume",x);
-        //musicvolume settings PlayerPrefs.SetFloat("MusicVolume",x);
-    }
+    //public void ToggleConfirmWindow()
+    //{
+    //    audioSource.Play();
+    //    ConfirmWindow.SetActive(!ConfirmWindow.activeSelf);
+    //}
+    //public void ConfirmSettings()
+    //{
+    //    //master volume settings PlayerPrefs.SetFloat("MasterVolume",x);
+    //    //sfxvolume settings PlayerPrefs.SetFloat("SfxVolume",x);
+    //    //musicvolume settings PlayerPrefs.SetFloat("MusicVolume",x);
+    //}
     public void ToggleAudio()
     {
         isAudioOn = !isAudioOn;
@@ -58,11 +79,13 @@ public class UIManager : MonoBehaviour
         masterMixer.SetFloat("MasterVolume", (vol == -80.0f) ? 0.0f : -80.0f);
 
         AudioButton.image.sprite = (isAudioOn) ? AudioOff : AudioOn;
+        audioSource.Play();
     }
 
     public void returnToMenu()
     {
-        GameManager.setGameState(GameManager.GAME_STATE.MAIN_MENU);
+        audioSource.Play();
+        changeLevel = true;
     }
     public void restartGame()
     {
