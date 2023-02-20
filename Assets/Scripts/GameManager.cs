@@ -202,7 +202,6 @@ public class GameManager : MonoBehaviour//, IUnityAdsInitializationListener
                 break;
             case GAME_STATE.MAIN_MENU:
                 lossSFX.mute = true;
-                Time.timeScale = 1;
                 PlayerPrefs.Save();
                 SceneManager.LoadScene("MainMenu");
                 break;

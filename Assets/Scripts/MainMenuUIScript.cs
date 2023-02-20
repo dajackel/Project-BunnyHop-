@@ -13,7 +13,7 @@ public class MainMenuUIScript : MonoBehaviour
     [SerializeField] Image levelFade;
     private bool changeLevel = false;
     private float fadeTime = 0;
-    private float fadeDuration = 10f;
+    private float fadeDuration = 9f;
     public void playGame()
     {
         disableButtons();
@@ -25,7 +25,6 @@ public class MainMenuUIScript : MonoBehaviour
         if (changeLevel)
         {
             fadeTime += Time.unscaledDeltaTime;
-            print(levelFade.color.a);
             if (levelFade.color.a < 1)
             {
                 levelFade.color = Color.Lerp(levelFade.color, Color.black, fadeTime / fadeDuration);
