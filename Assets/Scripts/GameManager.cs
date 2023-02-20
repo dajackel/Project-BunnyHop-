@@ -31,7 +31,7 @@ public class GameManager : MonoBehaviour//, IUnityAdsInitializationListener
     private int newestLevel = 0;
 
     //player highscore
-    public static float highScore, bestHeightThisRun = 0;
+    public static float HighScore, bestHeightThisRun;
     public static GAME_STATE gameState;
 
     public enum GAME_STATE
@@ -48,12 +48,13 @@ public class GameManager : MonoBehaviour//, IUnityAdsInitializationListener
 
     void Start()
     {
+        bestHeightThisRun = 0;
         backgroundMusic = Camera.main.GetComponents<AudioSource>()[0];
         lossSFX = Camera.main.GetComponents<AudioSource>()[1];
         gameState = GAME_STATE.GAME_RUNNING;
         Time.timeScale = 1.0f;
-        highScore = PlayerPrefs.GetFloat("highScore", 0.0f);
-        UI.updateHighScore(highScore);
+        HighScore = PlayerPrefs.GetFloat("HighScore", 0.0f);
+        UI.updateHighScore(HighScore);
         BLevelBound.transform.position = new Vector2(BLevelBound.transform.position.x, -8.4f);
     }
 
@@ -76,11 +77,11 @@ public class GameManager : MonoBehaviour//, IUnityAdsInitializationListener
 
         if (pHeight > bestHeightThisRun)
             bestHeightThisRun = pHeight;
-        if (pHeight > highScore)
+        if (pHeight > HighScore)
         {
-            highScore = pHeight;
-            UI.updateHighScore(highScore);
-            PlayerPrefs.SetFloat("highScore", highScore);
+            HighScore = pHeight;
+            UI.updateHighScore(HighScore);
+            PlayerPrefs.SetFloat("HighScore", HighScore);
         }
         UI.bestHeightThisRun = bestHeightThisRun;
         if (currentLevelPos >= nextColorChange)
