@@ -117,7 +117,7 @@ public class UIManager : MonoBehaviour
             lossUIImages[2].interactable = false;
             Color tempColor = lossText[2].faceColor;
             tempColor.a = 50;
-            lossText[2].faceColor = tempColor;
+            lossText[2].text="";
             RewardedAdButton.gameObject.SetActive(true);
         }
         else

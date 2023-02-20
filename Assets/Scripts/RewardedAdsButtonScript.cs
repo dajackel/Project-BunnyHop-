@@ -20,18 +20,6 @@ public class RewardedAdsButtonScript : MonoBehaviour, IUnityAdsListener
     private void Start()
     {
         adButton = gameObject.GetComponent<Button>();
-        // Advertisement.AddListener(this);
-        //initialize ad for later use
-        //#if UNITY_IOS
-        //	        Advertisement.Initialize(myGameIdIOS, testMode, true, this);
-        //	        myAdUnitId = _iOSAdUnitId;
-        //#else
-        //        Advertisement.Initialize(myGameIdAndroid, testMode, true);
-        //        _adUnitId = _androidAdUnitId;
-        //#endif
-    }
-    public void playAd()
-    {
         // Initialize the Ads listener and service:
         Advertisement.AddListener(this);
 #if UNITY_IOS
@@ -41,6 +29,9 @@ public class RewardedAdsButtonScript : MonoBehaviour, IUnityAdsListener
         Advertisement.Initialize(myGameIdAndroid, testMode, true);
         _adUnitId = _androidAdUnitId;
 #endif
+    }
+    public void playAd()
+    {
 
         //load & play ad
         Advertisement.Load(_adUnitId);
