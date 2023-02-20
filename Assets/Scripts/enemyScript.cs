@@ -16,6 +16,8 @@ public class enemyScript : MonoBehaviour
         rigidBody = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         audioSource = GetComponent<AudioSource>();
+        transform.Rotate(0, 0, Random.Range(-12f, 12f));
+        rigidBody.velocity = transform.right * speed;
     }
     private void Update()
     {
