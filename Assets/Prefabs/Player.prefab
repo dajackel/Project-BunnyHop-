@@ -83,7 +83,7 @@ SpriteRenderer:
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 0.35, y: 0.32}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -104,6 +104,7 @@ MonoBehaviour:
   speed: 3
   bounceHeight: 26
   currHeight: 0
+  extraLives: 0
   lose: 0
 --- !u!50 &8352070866440270248
 Rigidbody2D:
@@ -164,7 +165,7 @@ BoxCollider2D:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
     oldSize: {x: 0.35, y: 0.32}
-    newSize: {x: 1, y: 1}
+    newSize: {x: 0.35, y: 0.32}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0

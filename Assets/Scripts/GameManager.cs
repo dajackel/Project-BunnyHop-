@@ -101,7 +101,7 @@ public class GameManager : MonoBehaviour//, IUnityAdsInitializationListener
         GameObject spawnedSection = null;
         GameObject chosenItem = null;
         creatingLevel = true;
-        currentLevelPos += 25;
+        currentLevelPos += 30;
         //spawn level section
         int lvlToSpawn = Random.Range(1, levelSection.Length);
         if (lastLevelSpawned == levelSection[lvlToSpawn])
