@@ -73,4 +73,9 @@ public class MainMenuUIScript : MonoBehaviour
             btn.interactable = false;
         }
     }
+
+    public void playInteractAudio()
+    {
+        GetComponent<AudioSource>().Play();
+    }
 }

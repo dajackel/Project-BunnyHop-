@@ -58,7 +58,6 @@ public class UIManager : MonoBehaviour
     }
     public void TogglePauseMenu()
     {
-        audioSource.Play();
         if (GameManager.getGameState() == GameManager.GAME_STATE.GAME_OVER)
             return;
         GameManager.setGameState((GameManager.getGameState() == GameManager.GAME_STATE.GAME_RUNNING) ? GameManager.GAME_STATE.GAME_PAUSED : GameManager.GAME_STATE.GAME_RUNNING);
@@ -66,7 +65,6 @@ public class UIManager : MonoBehaviour
     }
     public void ToggleConfirmWindow()
     {
-        audioSource.Play();
         ConfirmWindow.SetActive(!ConfirmWindow.activeSelf);
     }
     //public void ConfirmSettings()
@@ -83,12 +81,10 @@ public class UIManager : MonoBehaviour
         masterMixer.SetFloat("MasterVolume", (vol == -80.0f) ? 0.0f : -80.0f);
 
         AudioButton.image.sprite = (isAudioOn) ? AudioOff : AudioOn;
-        audioSource.Play();
     }
 
     public void returnToMenu()
     {
-        audioSource.Play();
         changeLevel = true;
         disableButtons();
     }
@@ -97,7 +93,10 @@ public class UIManager : MonoBehaviour
         GameManager.setGameState(GameManager.GAME_STATE.GAME_RESTART);
     }
 
-    public void updateHighScore(float hs) { pHighScore = hs; pHighScoreText.text = "Highscore: " + pHighScore.ToString("0.000"); }
+    public void updateHighScore(float hs)
+    {
+        pHighScore = hs; pHighScoreText.text = "Highscore: " + pHighScore.ToString("0.000");
+    }
 
     public void lossScreenTrigger()
     {
@@ -135,7 +134,6 @@ public class UIManager : MonoBehaviour
         GameManager.setGameState(GameManager.GAME_STATE.GAME_CONTINUE);
     }
 
-
     private void disableButtons()
     {
         Button[] buttons = FindObjectsOfType<Button>();
@@ -143,5 +141,10 @@ public class UIManager : MonoBehaviour
         {
             btn.interactable = false;
         }
+    }
+
+    public void playInteractAudio()
+    {
+        audioSource.Play();
     }
 }
