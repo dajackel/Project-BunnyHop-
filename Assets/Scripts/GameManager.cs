@@ -1,18 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
+//using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour//, IUnityAdsInitializationListener
 {
+    SceneTrackingScript SceneManager;
+    [SerializeField] UIManager UI;
+    [SerializeField] GameObject lLevelBound, rLevelBound, BLevelBound;
     public bool paused = false;
     private float timescaleAtLose = 0, currentLevelPos = 25;
     public GameObject[] levelSection;
     public GameObject[] powerUps;
     private GameObject lastLevelSpawned;
-    [SerializeField] UIManager UI;
-    [SerializeField] GameObject lLevelBound, rLevelBound, BLevelBound;
     private bool creatingLevel = false;
     float backgroundColorChangeVal = 0;
     int nextColorChange = 500;
@@ -48,6 +49,7 @@ public class GameManager : MonoBehaviour//, IUnityAdsInitializationListener
 
     void Start()
     {
+        SceneManager = GameObject.FindGameObjectWithTag("PreviousScene").GetComponent<SceneTrackingScript>();
         bestHeightThisRun = 0;
         backgroundMusic = Camera.main.GetComponents<AudioSource>()[0];
         lossSFX = Camera.main.GetComponents<AudioSource>()[1];
@@ -90,19 +92,34 @@ public class GameManager : MonoBehaviour//, IUnityAdsInitializationListener
             backgroundColorChangeVal += 0.01f;
         }
     }
-
+    private GameObject randomItemGen()
+    {
+        float extraLifeChance = 2f,
+            invincibilityChance = 15;
+        //item[0] = extra life, item[1] = invincibility
+        float spawnVal = Random.Range(1, 100);
+        if (spawnVal <= extraLifeChance)
+        {
+            //choose extra life
+            return powerUps[0];
+        }
+        else if (spawnVal <= invincibilityChance)
+        {
+            //choose invincibility
+            return powerUps[1];
+        }
+        return null;
+    }
     IEnumerator levelGenerator()
     {
         float pHeight = player.transform.position.y + player.GetComponent<BoxCollider2D>().size.y / 2;
         if (currentLevelPos >= pHeight + 100)
             yield return new WaitUntil(() => currentLevelPos <= pHeight + 100);
         float ENEMY_SPAWN_CHANCE = 25;
-        float extraLifeChance = 5f,
-            invincibilityChance = 20f;
         GameObject spawnedSection = null;
-        GameObject chosenItem = null;
         creatingLevel = true;
         currentLevelPos += 30;
+
         //spawn level section
         int lvlToSpawn = Random.Range(1, levelSection.Length);
         if (lastLevelSpawned == levelSection[lvlToSpawn])
@@ -123,24 +140,13 @@ public class GameManager : MonoBehaviour//, IUnityAdsInitializationListener
         }
 
         //spawn items
-        //item[0] = extra life, item[1] = invincibility
-        spawnVal = Random.Range(1, 100);
-        if (spawnVal <= extraLifeChance)
-        {
-            //choose extra life
-            chosenItem = powerUps[0];
-        }
-        else if (spawnVal <= invincibilityChance)
-        {
-            //choose invincibility
-            chosenItem = powerUps[1];
-        }
+        GameObject chosenItem = randomItemGen();
         if (chosenItem != null)
         {
             //find viable position within level section just spawned
             Transform[] objInLvl = spawnedSection.GetComponentsInChildren<Transform>();
             //select random platform
-            int platform = Random.Range(1, objInLvl.Length);
+            int platform = Random.Range(2, objInLvl.Length);
 
             //instantiate item slightly above chosen platform
             Vector3 pos = new Vector3(objInLvl[platform].position.x, objInLvl[platform].position.y + 2, objInLvl[platform].position.z);

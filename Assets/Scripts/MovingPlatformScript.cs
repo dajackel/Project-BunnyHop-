@@ -5,12 +5,14 @@ using UnityEngine;
 public class MovingPlatformScript : MonoBehaviour
 {
     [SerializeField] float speed;
-    [SerializeField] Vector3 startPos, endPos;
+    [SerializeField] Vector3 endPos;
+    public Vector3 startPos;
     private Vector3 targetPosition;
     private bool waiting = false, canMove = true;
     // Start is called before the first frame update
-    void Start()
+    private void Awake()
     {
+        startPos = transform.localPosition;
         targetPosition = endPos;
     }
 
