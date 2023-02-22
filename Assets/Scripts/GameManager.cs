@@ -1,12 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-//using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour//, IUnityAdsInitializationListener
 {
-    SceneTrackingScript SceneManager;
+    public SceneTrackingScript SceneManager;
     [SerializeField] UIManager UI;
     [SerializeField] GameObject lLevelBound, rLevelBound, BLevelBound;
     public bool paused = false;
@@ -50,22 +49,28 @@ public class GameManager : MonoBehaviour//, IUnityAdsInitializationListener
     void Start()
     {
         SceneManager = GameObject.FindGameObjectWithTag("PreviousScene").GetComponent<SceneTrackingScript>();
+
         bestHeightThisRun = 0;
         backgroundMusic = Camera.main.GetComponents<AudioSource>()[0];
         lossSFX = Camera.main.GetComponents<AudioSource>()[1];
         gameState = GAME_STATE.GAME_RUNNING;
-        Time.timeScale = 1.0f;
         HighScore = PlayerPrefs.GetFloat("HighScore", 0.0f);
         UI.updateHighScore(HighScore);
         BLevelBound.transform.position = new Vector2(BLevelBound.transform.position.x, -8.4f);
+        setGameState(GAME_STATE.GAME_RUNNING);
     }
 
     // Update is called once per frame
     void Update()
     {
+        PlayerScript pScript = player.GetComponent<PlayerScript>();
         if (Time.timeScale == 0)
             return;
-        PlayerScript pScript = player.GetComponent<PlayerScript>();
+        if(!UI.getIsFadeCompleted())
+            pScript.enabled = false;
+        else
+            pScript.enabled = true;
+
         if (pScript.lose == true || BLevelBound.transform.position.y >= player.transform.position.y)
             setGameState(GAME_STATE.GAME_OVER);
         if (!creatingLevel)
@@ -217,7 +222,6 @@ public class GameManager : MonoBehaviour//, IUnityAdsInitializationListener
                 break;
             case GAME_STATE.GAME_RESTART:
                 bestHeightThisRun = 0.0f;
-                Time.timeScale = 1.0f;
                 SceneManager.LoadScene("MainGame");
                 break;
         }

@@ -126,10 +126,11 @@ public class RewardedAdsButtonScript : MonoBehaviour, IUnityAdsListener
         if (adCompleted)
         {
             player.extraLives++;
-            adButton.gameObject.SetActive(false);
-            gameObject.transform.parent.GetChild(4).GetComponent<Button>().interactable = true;
+            adButton.gameObject.transform.parent.GetChild(4).GetComponent<Button>().interactable = true;
             TextMeshProUGUI[] lossScText = gameObject.transform.parent.GetComponentsInChildren<TextMeshProUGUI>();
             lossScText[2].text = "x" + player.extraLives.ToString();
+            adButton.gameObject.SetActive(false);
         }
+        Advertisement.RemoveListener(this);
     }
 }

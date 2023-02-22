@@ -7,6 +7,7 @@ using UnityEngine.Audio;
 
 public class UIManager : MonoBehaviour
 {
+    private SceneTrackingScript SceneManager;
     [SerializeField] GameObject PauseMenu;
     [SerializeField] GameManager GameManager;
     [SerializeField] GameObject ConfirmWindow;
@@ -15,7 +16,6 @@ public class UIManager : MonoBehaviour
     [SerializeField] Button RewardedAdButton;
     [SerializeField] AudioMixer masterMixer;
     private AudioSource audioSource;
-    //private float maxVol;
     private bool isAudioOn;
     [SerializeField] Sprite AudioOn, AudioOff;
     [SerializeField] GameObject playerCurrHeight, playerHighScore;
@@ -24,13 +24,31 @@ public class UIManager : MonoBehaviour
     public int extraLifeCount = 0;
 
     [SerializeField] Image levelFade;
-    private bool changeLevel = false;
+    private bool changeLevel;
     private float fadeTime = 0;
     private float fadeDuration = 10f;
+    private bool isFadeCompleted;
+    private bool fadeInOut;
+    private bool haveWatchedAd = false;
 
 
     private void Start()
     {
+        SceneManager = GameObject.FindGameObjectWithTag("PreviousScene").GetComponent<SceneTrackingScript>();
+        if (SceneManager.getPreviousScene() == "MainMenu")
+        {
+            levelFade.color = Color.black;
+            setFadeCompleted(false);
+            changeLevel = true;
+            fadeInOut = false;
+        }
+        else
+        {
+            levelFade.color = Color.clear;
+            setFadeCompleted(true);
+            changeLevel = false;
+            fadeInOut = true;
+        }
         bestHeightThisRun = 0;
         audioSource = GetComponent<AudioSource>();
         pHeightText = playerCurrHeight.GetComponent<TextMeshPro>();
@@ -38,23 +56,42 @@ public class UIManager : MonoBehaviour
     }
     private void Update()
     {
-        if (changeLevel)
+        if (changeLevel)//if changing to a new scene
         {
             fadeTime += Time.unscaledDeltaTime;
-            if (levelFade.color.a < 1)
-            {
-                levelFade.color = Color.Lerp(levelFade.color, Color.black, fadeTime / fadeDuration);
-            }
+            //check for scene difference if true
+            //fade to scean else fade to black
+            if (!getIsFadeCompleted())
+                setFadeCompleted(fadeTransition(fadeInOut));//fade
             else
             {
-                audioSource.Stop();
-                GameManager.setGameState(GameManager.GAME_STATE.MAIN_MENU);
+                //fade finished
+                if (levelFade.color == Color.black)
+                {
+                    //going back to main menu
+                    audioSource.Stop();
+                    GameManager.setGameState(GameManager.GAME_STATE.MAIN_MENU);
+                }
+                //just faded into game
+                changeLevel = false;
             }
         }
+        else
+        {
+            if (GameManager.bestHeightThisRun > bestHeightThisRun)
+                bestHeightThisRun = GameManager.bestHeightThisRun;
+            pHeightText.text = bestHeightThisRun.ToString("0.000");
+        }
+    }
+    //send true or nothing to fade to black, send false to fade to screen
+    private bool fadeTransition(bool fwdsbckwds)
+    {
+        Color intendedColor = fwdsbckwds ? Color.black : Color.clear;
+        levelFade.color = Color.Lerp(levelFade.color, intendedColor, fadeTime / fadeDuration);
+        if (levelFade.color == intendedColor)
+            return true;
 
-        if (GameManager.bestHeightThisRun > bestHeightThisRun)
-            bestHeightThisRun = GameManager.bestHeightThisRun;
-        pHeightText.text = bestHeightThisRun.ToString("0.000");
+        return false;
     }
     public void TogglePauseMenu()
     {
@@ -67,12 +104,6 @@ public class UIManager : MonoBehaviour
     {
         ConfirmWindow.SetActive(!ConfirmWindow.activeSelf);
     }
-    //public void ConfirmSettings()
-    //{
-    //    //master volume settings PlayerPrefs.SetFloat("MasterVolume",x);
-    //    //sfxvolume settings PlayerPrefs.SetFloat("SfxVolume",x);
-    //    //musicvolume settings PlayerPrefs.SetFloat("MusicVolume",x);
-    //}
     public void ToggleAudio()
     {
         isAudioOn = !isAudioOn;
@@ -87,6 +118,10 @@ public class UIManager : MonoBehaviour
     {
         changeLevel = true;
         disableButtons();
+        setFadeCompleted(false);
+        changeLevel = true;
+        fadeInOut = true;
+        fadeTime = 0;
     }
     public void restartGame()
     {
@@ -117,8 +152,12 @@ public class UIManager : MonoBehaviour
             lossUIImages[2].interactable = false;
             Color tempColor = lossText[2].faceColor;
             tempColor.a = 50;
-            lossText[2].text = "";
-            RewardedAdButton.gameObject.SetActive(true);
+            if (!getHaveWatchedAd())
+            {
+                lossText[2].text = "";
+                RewardedAdButton.gameObject.SetActive(true);
+            }
+
         }
         else
         {
@@ -147,4 +186,11 @@ public class UIManager : MonoBehaviour
     {
         audioSource.Play();
     }
+
+    public bool getIsFadeCompleted() { return isFadeCompleted; }
+    private void setFadeCompleted(bool tf) { isFadeCompleted = tf; }
+
+    public bool getHaveWatchedAd() { return haveWatchedAd; }
+
+    public void setHaveWatchedAd(bool tf) { haveWatchedAd = tf; }
 }

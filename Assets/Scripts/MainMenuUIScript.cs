@@ -11,27 +11,40 @@ public class MainMenuUIScript : MonoBehaviour
     [SerializeField] GameObject resetScoreWindow;
     [SerializeField] Button resetScorebutton;
     [SerializeField] Image levelFade;
-    private bool changeLevel = false;
+    private bool changeLevel = true;
     private float fadeTime = 0;
     private float fadeDuration = 9f;
+    private SceneTrackingScript sceneManager;
+    private Color intendedColor;
+
+    private void Start()
+    {
+        sceneManager = GameObject.FindGameObjectWithTag("PreviousScene").GetComponent<SceneTrackingScript>();
+        levelFade.color = Color.black;
+        intendedColor = Color.clear;
+    }
     public void playGame()
     {
         disableButtons();
         GetComponent<AudioSource>().Play();
         changeLevel = true;
+        intendedColor = Color.black;
     }
     private void Update()
     {
         if (changeLevel)
         {
             fadeTime += Time.unscaledDeltaTime;
-            if (levelFade.color.a < 1)
+            if (levelFade.color!=intendedColor)
             {
-                levelFade.color = Color.Lerp(levelFade.color, Color.black, fadeTime / fadeDuration);
-                print(levelFade.color.a);
+                fadeTransition(intendedColor==Color.black);
             }
             else
-                UnityEngine.SceneManagement.SceneManager.LoadScene("MainGame");
+            {
+                if(intendedColor==Color.black)
+                    sceneManager.LoadScene("MainGame");
+                changeLevel = false;
+            }
         }
     }
     public void ToggleAudio()
@@ -77,5 +90,14 @@ public class MainMenuUIScript : MonoBehaviour
     public void playInteractAudio()
     {
         GetComponent<AudioSource>().Play();
+    }
+    private bool fadeTransition(bool fwdsbckwds)
+    {
+        Color intendedColor = fwdsbckwds ? Color.black : Color.clear;
+        levelFade.color = Color.Lerp(levelFade.color, intendedColor, fadeTime / fadeDuration);
+        if (levelFade.color == intendedColor)
+            return true;
+
+        return false;
     }
 }
