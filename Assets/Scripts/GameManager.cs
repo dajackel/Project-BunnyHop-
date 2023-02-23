@@ -14,8 +14,8 @@ public class GameManager : MonoBehaviour//, IUnityAdsInitializationListener
     public GameObject[] powerUps;
     private GameObject lastLevelSpawned;
     private bool creatingLevel = false;
-    float backgroundColorChangeVal = 0;
-    int nextColorChange = 500;
+    //float backgroundColorChangeVal = 0;
+    //int nextColorChange = 500;
     private AudioSource backgroundMusic;
     private AudioSource lossSFX;
 
@@ -91,11 +91,11 @@ public class GameManager : MonoBehaviour//, IUnityAdsInitializationListener
             PlayerPrefs.SetFloat("HighScore", HighScore);
         }
         UI.bestHeightThisRun = bestHeightThisRun;
-        if (currentLevelPos >= nextColorChange)
-        {
-            nextColorChange += nextColorChange;
-            backgroundColorChangeVal += 0.01f;
-        }
+        //if (currentLevelPos >= nextColorChange)
+        //{
+        //    nextColorChange += nextColorChange;
+        //    backgroundColorChangeVal += 0.01f;
+        //}
     }
     private GameObject randomItemGen()
     {
@@ -133,7 +133,7 @@ public class GameManager : MonoBehaviour//, IUnityAdsInitializationListener
         lastLevelSpawned = levelSection[lvlToSpawn];
 
         //color background by height
-        spawnedSection.GetComponentsInChildren<SpriteRenderer>()[0].color = Color.Lerp(spawnedSection.GetComponentsInChildren<SpriteRenderer>()[0].color, Color.black, backgroundColorChangeVal);
+        //spawnedSection.GetComponentsInChildren<SpriteRenderer>()[0].color = Color.Lerp(spawnedSection.GetComponentsInChildren<SpriteRenderer>()[0].color, Color.black, backgroundColorChangeVal);
 
         //spawn enemies
         float spawnVal = Random.Range(1, 100);

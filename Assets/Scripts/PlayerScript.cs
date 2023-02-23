@@ -145,7 +145,7 @@ public class PlayerScript : MonoBehaviour
 
     IEnumerator landed()
     {
-        audioSource.PlayScheduled(AudioSettings.dspTime+ (0.5f / Time.timeScale));
+        audioSource.PlayScheduled(AudioSettings.dspTime + (0.5f / Time.timeScale));
         yield return new WaitForSeconds(1);
         if (grounded)
         {

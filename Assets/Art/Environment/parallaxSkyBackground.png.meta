@@ -142,8 +142,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 34f6eab0f7eb25e4b8e490ec7f07902b
-      internalID: 33221856
+      spriteID: 6607548556dc3514185bce70ba668cc7
+      internalID: -1311771683
       vertices: []
       indices: 
       edges: []
@@ -163,8 +163,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 912f0149c9bb2a747a0f3a047e71be59
-      internalID: 881919965
+      spriteID: a629970b5911f6c4c80433b98f71d810
+      internalID: -871076701
       vertices: []
       indices: 
       edges: []
@@ -184,8 +184,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: ab75d61f99443fa4982a33db317aa72c
-      internalID: -2139329859
+      spriteID: 3f71cd2090be10a45972d55ef03bea3b
+      internalID: 469299512
       vertices: []
       indices: 
       edges: []
@@ -201,9 +201,9 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      parallaxSkyBackground_2: -2139329859
-      parallaxSkyBackground_0: 33221856
-      parallaxSkyBackground_1: 881919965
+      parallaxSkyBackground_2: 469299512
+      parallaxSkyBackground_0: -1311771683
+      parallaxSkyBackground_1: -871076701
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0
