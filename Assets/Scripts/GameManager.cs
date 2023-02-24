@@ -112,7 +112,7 @@ public class GameManager : MonoBehaviour//, IUnityAdsInitializationListener
         float ENEMY_SPAWN_CHANCE = 25;
         GameObject spawnedSection = null;
         creatingLevel = true;
-        currentLevelPos += 30;
+        currentLevelPos += 26;
 
         //spawn level section
         int lvlToSpawn = Random.Range(1, levelSection.Length);
@@ -188,7 +188,6 @@ public class GameManager : MonoBehaviour//, IUnityAdsInitializationListener
                 UI.lossScreenTrigger();
                 break;
             case GAME_STATE.GAME_CONTINUE:
-                paused = false;
                 if (lossSFX.isPlaying)
                     lossSFX.Stop();
                 backgroundMusic.volume = 0.3f;
@@ -198,6 +197,7 @@ public class GameManager : MonoBehaviour//, IUnityAdsInitializationListener
                 pScript.lose = false;
                 pScript.useExtraLife();
                 UI.lossScreenTrigger();
+                paused = false;
                 setGameState(GAME_STATE.GAME_RUNNING);
                 Time.timeScale = timescaleAtLose;
                 break;
