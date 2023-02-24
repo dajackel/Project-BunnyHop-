@@ -36,6 +36,9 @@ public class InvincibilityItemScript : MonoBehaviour
         }
         gameObject.GetComponent<Animator>().SetTrigger("Item PickUp");
         effectedObject = collision.gameObject;
+        PlayerScript ps = effectedObject.GetComponent<PlayerScript>();
+            ps.setIsInvincible(true);
+        effectedObject.GetComponent<SpriteRenderer>().color = Color.gray;
         transform.parent = null;
     }
     private void HideSprite()

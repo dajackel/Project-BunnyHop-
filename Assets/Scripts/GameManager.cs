@@ -14,8 +14,6 @@ public class GameManager : MonoBehaviour//, IUnityAdsInitializationListener
     public GameObject[] powerUps;
     private GameObject lastLevelSpawned;
     private bool creatingLevel = false;
-    //float backgroundColorChangeVal = 0;
-    //int nextColorChange = 500;
     private AudioSource backgroundMusic;
     private AudioSource lossSFX;
 
@@ -41,8 +39,6 @@ public class GameManager : MonoBehaviour//, IUnityAdsInitializationListener
         GAME_CONTINUE,
         GAME_OVER,
         MAIN_MENU,
-        GAME_EXIT,
-        GAME_START,
         GAME_RESTART,
     }
 
@@ -53,7 +49,6 @@ public class GameManager : MonoBehaviour//, IUnityAdsInitializationListener
         bestHeightThisRun = 0;
         backgroundMusic = Camera.main.GetComponents<AudioSource>()[0];
         lossSFX = Camera.main.GetComponents<AudioSource>()[1];
-        gameState = GAME_STATE.GAME_RUNNING;
         HighScore = PlayerPrefs.GetFloat("HighScore", 0.0f);
         UI.updateHighScore(HighScore);
         BLevelBound.transform.position = new Vector2(BLevelBound.transform.position.x, -8.4f);
@@ -63,10 +58,10 @@ public class GameManager : MonoBehaviour//, IUnityAdsInitializationListener
     // Update is called once per frame
     void Update()
     {
-        PlayerScript pScript = player.GetComponent<PlayerScript>();
-        if (Time.timeScale == 0)
+        if (paused)
             return;
-        if(!UI.getIsFadeCompleted())
+        PlayerScript pScript = player.GetComponent<PlayerScript>();
+        if (!UI.getIsFadeCompleted())
             pScript.enabled = false;
         else
             pScript.enabled = true;
@@ -75,7 +70,6 @@ public class GameManager : MonoBehaviour//, IUnityAdsInitializationListener
             setGameState(GAME_STATE.GAME_OVER);
         if (!creatingLevel)
             StartCoroutine(levelGenerator());
-        //top of player's head position
         float pHeight = player.transform.position.y/* + player.GetComponent<BoxCollider2D>().size.y / 2*/;
         lLevelBound.transform.position = new Vector3(lLevelBound.transform.position.x, pHeight, lLevelBound.transform.position.z);
         rLevelBound.transform.position = new Vector3(rLevelBound.transform.position.x, pHeight, rLevelBound.transform.position.z);
@@ -91,11 +85,6 @@ public class GameManager : MonoBehaviour//, IUnityAdsInitializationListener
             PlayerPrefs.SetFloat("HighScore", HighScore);
         }
         UI.bestHeightThisRun = bestHeightThisRun;
-        //if (currentLevelPos >= nextColorChange)
-        //{
-        //    nextColorChange += nextColorChange;
-        //    backgroundColorChangeVal += 0.01f;
-        //}
     }
     private GameObject randomItemGen()
     {
@@ -117,7 +106,7 @@ public class GameManager : MonoBehaviour//, IUnityAdsInitializationListener
     }
     IEnumerator levelGenerator()
     {
-        float pHeight = player.transform.position.y + player.GetComponent<BoxCollider2D>().size.y / 2;
+        float pHeight = player.GetComponent<PlayerScript>().getPlayerHeight();
         if (currentLevelPos >= pHeight + 100)
             yield return new WaitUntil(() => currentLevelPos <= pHeight + 100);
         float ENEMY_SPAWN_CHANCE = 25;
@@ -131,9 +120,6 @@ public class GameManager : MonoBehaviour//, IUnityAdsInitializationListener
             lvlToSpawn = (lvlToSpawn + 1) % levelSection.Length;
         spawnedSection = Instantiate(levelSection[lvlToSpawn], new Vector3(-1.25f, currentLevelPos, 0), Quaternion.identity);
         lastLevelSpawned = levelSection[lvlToSpawn];
-
-        //color background by height
-        //spawnedSection.GetComponentsInChildren<SpriteRenderer>()[0].color = Color.Lerp(spawnedSection.GetComponentsInChildren<SpriteRenderer>()[0].color, Color.black, backgroundColorChangeVal);
 
         //spawn enemies
         float spawnVal = Random.Range(1, 100);
@@ -168,7 +154,6 @@ public class GameManager : MonoBehaviour//, IUnityAdsInitializationListener
         if (currentLevelSections[newestLevel] != null)
         {
             yield return new WaitUntil(() => currentLevelSections[newestLevel].transform.position.y <= player.transform.position.y - 45);
-            //yield return new WaitForSeconds(3);
             Destroy(currentLevelSections[newestLevel]);
         }
         currentLevelSections[newestLevel] = newLevelSection;
@@ -181,6 +166,7 @@ public class GameManager : MonoBehaviour//, IUnityAdsInitializationListener
         switch (gameState)
         {
             case GAME_STATE.GAME_RUNNING:
+                paused = false;
                 backgroundMusic.volume = 0.3f;
                 backgroundMusic.UnPause();
                 Time.timeScale = 1;
@@ -188,8 +174,10 @@ public class GameManager : MonoBehaviour//, IUnityAdsInitializationListener
             case GAME_STATE.GAME_PAUSED:
                 backgroundMusic.volume = 0.15f;
                 Time.timeScale = 0;
+                paused = true;
                 break;
             case GAME_STATE.GAME_OVER:
+                paused = true;
                 lossSFX.Play();
                 backgroundMusic.volume = 0.15f;
                 backgroundMusic.Pause();
@@ -200,6 +188,7 @@ public class GameManager : MonoBehaviour//, IUnityAdsInitializationListener
                 UI.lossScreenTrigger();
                 break;
             case GAME_STATE.GAME_CONTINUE:
+                paused = false;
                 if (lossSFX.isPlaying)
                     lossSFX.Stop();
                 backgroundMusic.volume = 0.3f;
@@ -217,10 +206,8 @@ public class GameManager : MonoBehaviour//, IUnityAdsInitializationListener
                 PlayerPrefs.Save();
                 SceneManager.LoadScene("MainMenu");
                 break;
-            case GAME_STATE.GAME_EXIT:
-                QuitGame();
-                break;
             case GAME_STATE.GAME_RESTART:
+                paused = false;
                 bestHeightThisRun = 0.0f;
                 SceneManager.LoadScene("MainGame");
                 break;
@@ -228,9 +215,4 @@ public class GameManager : MonoBehaviour//, IUnityAdsInitializationListener
     }
     public GAME_STATE getGameState() { return gameState; }
 
-    public void QuitGame()
-    {
-        PlayerPrefs.Save();
-        Application.Quit();
-    }
 }

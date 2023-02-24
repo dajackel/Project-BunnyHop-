@@ -2917,7 +2917,7 @@ GameObject:
   - component: {fileID: 578117678}
   m_Layer: 0
   m_Name: GrassyLeftRocks
-  m_TagString: Ground
+  m_TagString: Platform
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3391,7 +3391,7 @@ GameObject:
   - component: {fileID: 638814393}
   m_Layer: 0
   m_Name: LowerLevelBound
-  m_TagString: Untagged
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4553,7 +4553,7 @@ GameObject:
   - component: {fileID: 835474952}
   m_Layer: 0
   m_Name: GrassyRightRocks
-  m_TagString: Ground
+  m_TagString: Platform
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4638,7 +4638,7 @@ GameObject:
   - component: {fileID: 933451048}
   m_Layer: 0
   m_Name: BottomFloor
-  m_TagString: Ground
+  m_TagString: Platform
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5726,7 +5726,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4f63f0207dc19644bba238f6280672a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cam: {fileID: 519420028}
   parallaxEffect: 0.7
 --- !u!212 &1272416867
 SpriteRenderer:
@@ -5916,7 +5915,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4f63f0207dc19644bba238f6280672a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cam: {fileID: 519420028}
   parallaxEffect: 0
 --- !u!212 &1403355706
 SpriteRenderer:
@@ -6084,7 +6082,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4f63f0207dc19644bba238f6280672a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cam: {fileID: 519420028}
   parallaxEffect: 0.3
 --- !u!212 &1515094645
 SpriteRenderer:

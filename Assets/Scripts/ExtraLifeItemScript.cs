@@ -17,7 +17,7 @@ public class ExtraLifeItemScript : MonoBehaviour
             StartCoroutine(destroyObject());
         }
         gameObject.GetComponent<SpriteRenderer>().forceRenderingOff = true;
-        coll.gameObject.GetComponent<PlayerScript>().extraLives++;
+        coll.gameObject.GetComponent<PlayerScript>().gainExtraLife();
     }
     IEnumerator destroyObject()
     {

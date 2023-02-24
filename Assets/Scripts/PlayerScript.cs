@@ -14,21 +14,20 @@ public struct float2
 }
 public class PlayerScript : MonoBehaviour
 {
-    private Rigidbody2D rigidBody;
-    public float speed, bounceHeight, currHeight;
-    public int extraLives = 0;
-    private bool grounded = true, invincible = false;
+    public float bounceHeight;
+    private float speed = 6;
+    private int extraLives = 0;
+    private bool grounded = true, isInvincible = false;
     public bool lose = false;
+    private Rigidbody2D rigidBody;
     private Animator animator;
     private SpriteRenderer spriteRenderer;
     private BoxCollider2D coll;
     private AudioSource audioSource;
 
-    private float fallSpeedIncInterval = 15f;
-    private float fallSpeedIncAmount = 0.1f;
-    private float timeSinceFallSpeedInc = 0.0f;
-
-    //extra stats
+    private float fallSpeedIncInterval = 15f,
+                  fallSpeedIncAmount = 0.1f,
+                  timeSinceFallSpeedInc = 0.0f;
 
     void Start()
     {
@@ -53,11 +52,10 @@ public class PlayerScript : MonoBehaviour
         if (Time.timeScale == 0)
             return;
         timeSinceFallSpeedInc += Time.deltaTime;
-        if (invincible)
+        if (getIsInvincible())
             if (spriteRenderer.color == Color.white)
-                invincible = false;
+                setIsInvincible(false);
 
-        setPlayerHeight((transform.position.y + coll.size.y < 0) ? 0 : transform.position.y + coll.size.y);
         if (rigidBody.velocity.y <= 0 && !grounded)
         { /*player is now fallinng*/
             animator.SetBool("Jumping", false);
@@ -100,20 +98,9 @@ public class PlayerScript : MonoBehaviour
                 jump(bounceHeight - 6);
             }
         }
-        else if (collTag == "Item")
+        else if (collTag == "Ground")
         {
-            //items are prefabs - remove clone addendum
-            string itemName = collision.name.Substring(0, collision.name.Length - 7);
-            if (itemName == "InvincibilityPowerUp")
-            {
-                //to avoid race set color
-                spriteRenderer.color = Color.gray;
-                invincible = true;
-            }
-        }
-        else
-        {
-            if (invincible)
+            if (getIsInvincible())
                 jump();
             else
                 lose = true;
@@ -121,25 +108,25 @@ public class PlayerScript : MonoBehaviour
     }
     private void movePlayerX()
     {
+        Vector3 targetPos;
         if (Input.touchSupported)
         {
             if (Input.touchCount > 0)
             {
                 Touch touch = Input.GetTouch(0);
-                Vector3 targetPos = Camera.main.ScreenToWorldPoint(touch.position);
+                targetPos = Camera.main.ScreenToWorldPoint(touch.position);
                 targetPos = new Vector3(targetPos.x, transform.position.y, transform.position.z);
-                transform.position = Vector3.MoveTowards(transform.position, targetPos, 2 * speed * Time.deltaTime);
+                transform.position = Vector3.MoveTowards(transform.position, targetPos, speed * Time.deltaTime);
             }
         }
-        else
+        else if(Input.anyKey)
         {
+            targetPos = new Vector3(transform.position.x, transform.position.y, transform.position.z);
             if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
-                rigidBody.velocity = new Vector2(-speed, rigidBody.velocity.y);
+                targetPos = new Vector3(-transform.right.x + transform.position.x, transform.position.y, transform.position.z);
             else if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
-                rigidBody.velocity = new Vector2(speed, rigidBody.velocity.y);
-
-            if (Input.GetKeyUp(KeyCode.A) || Input.GetKeyUp(KeyCode.LeftArrow) || Input.GetKeyUp(KeyCode.D) || Input.GetKeyUp(KeyCode.RightArrow))
-                rigidBody.velocity = new Vector2(0.0f, rigidBody.velocity.y);
+                targetPos = new Vector3(transform.right.x + transform.position.x, transform.position.y, transform.position.z);
+            transform.position = Vector3.MoveTowards(transform.position, targetPos, speed * Time.deltaTime);
         }
     }
 
@@ -159,19 +146,16 @@ public class PlayerScript : MonoBehaviour
         if (!audioSource.isPlaying)
             audioSource.PlayOneShot(audioSource.clip);
         animator.SetBool("Jumping", true);
-        rigidBody.velocity = (ovrRideVal != 0) ? 
-            new Vector2(rigidBody.velocity.x, ovrRideVal) : new Vector2(rigidBody.velocity.x, bounceHeight);
+        rigidBody.velocity = new Vector2(rigidBody.velocity.x, (ovrRideVal != 0) ? ovrRideVal : bounceHeight);
         grounded = false;
     }
 
-    private void setPlayerHeight(float height) { currHeight = height; }
-    public float getPlayerHeight() { return currHeight; }
+    public float getPlayerHeight() { return transform.position.y + coll.size.y / 2; }
 
     private void flipPlayerSprite()
     {
         if (Input.touchSupported)
         {
-
             Touch touch = Input.GetTouch(0);
             Vector3 targetPos = Camera.main.ScreenToWorldPoint(touch.position);
             float posDifference = targetPos.x - transform.position.x;
@@ -182,25 +166,21 @@ public class PlayerScript : MonoBehaviour
         }
         else
         {
-            if (spriteRenderer.flipX) //looking left
-            {
-                if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
-                    spriteRenderer.flipX = !spriteRenderer.flipX;
-            }
+            if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
+                    spriteRenderer.flipX = false;
 
-            else if (!spriteRenderer.flipX)//looking right
-            {
-                if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
-                    spriteRenderer.flipX = !spriteRenderer.flipX;
-            }
-            //else no change needed skip functionality entirely
+            else if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
+                    spriteRenderer.flipX = true;
         }
     }
 
     public int getExtraLifeCount() { return extraLives; }
+    public void gainExtraLife() { extraLives++; }
     public void useExtraLife()
     {
         extraLives--;
         jump();
     }
+    public bool getIsInvincible() { return isInvincible; }
+    public void setIsInvincible(bool setInvincible) { isInvincible = setInvincible; }
 }

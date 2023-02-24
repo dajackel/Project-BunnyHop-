@@ -4,12 +4,13 @@ using UnityEngine;
 
 public class verticalScrollBackgroundScript : MonoBehaviour
 {
-    public GameObject cam;
+    private GameObject cam;
     private float startPos, length;
     public float parallaxEffect;
     // Start is called before the first frame update
     void Start()
     {
+        cam = Camera.main.gameObject;
         Time.timeScale = 1f;
         startPos = transform.position.y;
         length = GetComponent<SpriteRenderer>().bounds.size.y;
