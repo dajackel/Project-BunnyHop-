@@ -20,88 +20,38 @@ public class RewardedAdsButtonScript : MonoBehaviour, IUnityAdsListener
     private void Start()
     {
         adButton = gameObject.GetComponent<Button>();
+        if(Application.internetReachability == NetworkReachability.NotReachable)
+        {
+            OnUnityAdsDidError("No internet connection");
+            return;
+        }
         // Initialize the Ads listener and service:
         Advertisement.AddListener(this);
+        Debug.Log("adListener");
 #if UNITY_IOS
+        Debug.Log("adInitialize");
 	        Advertisement.Initialize(myGameIdIOS, testMode, true, this);
 	        myAdUnitId = _iOSAdUnitId;
 #else
         Advertisement.Initialize(myGameIdAndroid, testMode, true);
         _adUnitId = _androidAdUnitId;
+        Debug.Log("adInitialize");
 #endif
     }
     public void playAd()
     {
 
         //load & play ad
+        Debug.Log("adLoad");
+        Debug.Log(_adUnitId);
         Advertisement.Load(_adUnitId);
         adButton.interactable = false;
     }
 
-    //public void OnInitializationComplete()
-    //{
-    //    Debug.Log("Unity Ads initialization complete.");
-    //    adButton.interactable = true;
-    //}
-    //
-    //public void OnInitializationFailed(UnityAdsInitializationError error, string message)
-    //{
-    //    _AdStatus = message;
-    //    Debug.Log($"Unity Ads Initialization Failed: {error.ToString()} - {message}");
-    //}
-    //
-    //public void OnUnityAdsAdLoaded(string adUnitId)
-    //{
-    //    Debug.Log("Ad Loaded: " + adUnitId);
-    //    if (!adStarted)
-    //    {
-    //        Advertisement.Show(_adUnitId);
-    //    }
-    //}
-    //public void OnUnityAdsFailedToLoad(string adUnitId, UnityAdsLoadError error, string message)
-    //{
-    //    _AdStatus = message;
-    //    Debug.Log($"Error showing Ad Unit {adUnitId}: {error.ToString()} - {message}");
-    //
-    //}
-    //
-    //public void OnUnityAdsShowFailure(string adUnitId, UnityAdsShowError error, string message)
-    //{
-    //    _AdStatus = message;
-    //    Debug.Log($"Error showing Ad Unit {adUnitId}: {error.ToString()} - {message}");
-    //}
-    //
-    //public void OnUnityAdsShowStart(string adUnitId)
-    //{
-    //    adStarted = true;
-    //    Debug.Log("Ad Started: " + adUnitId);
-    //}
-    //
-    //public void OnUnityAdsShowClick(string adUnitId)
-    //{
-    //    Debug.Log("Ad Clicked: " + adUnitId);
-    //}
-    //
-    //
-    //public void OnUnityAdsShowComplete(string adUnitId, UnityAdsShowCompletionState showCompletionState)
-    //{
-    //    PlayerScript player = GameObject.Find("Player").GetComponent<PlayerScript>();
-    //    adCompleted = showCompletionState == UnityAdsShowCompletionState.COMPLETED;
-    //    Debug.Log("Ad Completed: " + adUnitId);
-    //    player.gameObject.GetComponent<SpriteRenderer>().color = Color.red;
-    //    if (adCompleted)
-    //    {
-    //        player.gameObject.GetComponent<SpriteRenderer>().color = Color.green;
-    //        player.extraLives++;
-    //        adButton.gameObject.SetActive(false);
-    //        TextMeshProUGUI[] lossScText = gameObject.transform.parent.GetComponentsInChildren<TextMeshProUGUI>();
-    //        lossScText[2].text = "x" + player.extraLives.ToString();
-    //    }
-    //}
-
     public void OnUnityAdsReady(string placementId)
     {
         Debug.Log("adReady");
+        Debug.Log(placementId + " " + _adUnitId);
         if (placementId == _adUnitId)
         {
             Advertisement.Show(_adUnitId);
@@ -110,7 +60,14 @@ public class RewardedAdsButtonScript : MonoBehaviour, IUnityAdsListener
 
     public void OnUnityAdsDidError(string message)
     {
-        Debug.Log("adErr");
+        //ad failed remove button do not grant reward
+        Debug.Log(message);
+        PlayerScript player = GameObject.Find("Player").GetComponent<PlayerScript>();
+        TextMeshProUGUI lossScText = gameObject.transform.parent.GetComponentsInChildren<TextMeshProUGUI>()[2];
+        lossScText.text = "x" + player.getExtraLifeCount().ToString();
+        adButton.gameObject.SetActive(false);
+        Advertisement.RemoveListener(this);
+        Debug.Log("adRListener");
     }
 
     public void OnUnityAdsDidStart(string placementId)
@@ -127,10 +84,11 @@ public class RewardedAdsButtonScript : MonoBehaviour, IUnityAdsListener
         {
             player.gainExtraLife();
             adButton.gameObject.transform.parent.GetChild(4).GetComponent<Button>().interactable = true;
-            TextMeshProUGUI[] lossScText = gameObject.transform.parent.GetComponentsInChildren<TextMeshProUGUI>();
-            lossScText[2].text = "x" + player.getExtraLifeCount().ToString();
+            TextMeshProUGUI lossScText = gameObject.transform.parent.GetComponentsInChildren<TextMeshProUGUI>()[2];
+            lossScText.text = "x" + player.getExtraLifeCount().ToString();
             adButton.gameObject.SetActive(false);
         }
         Advertisement.RemoveListener(this);
+        Debug.Log("adRListener");
     }
 }
