@@ -209,6 +209,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2676515259842642064}
     m_Modifications:
+    - target: {fileID: 3787793459799979224, guid: 4264bb7a26cb6914ea566e408994062e, type: 3}
+      propertyPath: m_SortingOrder
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3787793459799979227, guid: 4264bb7a26cb6914ea566e408994062e, type: 3}
       propertyPath: m_Name
       value: SmallFloatingRockL (1)
@@ -256,6 +260,10 @@ PrefabInstance:
     - target: {fileID: 3787793459799979231, guid: 4264bb7a26cb6914ea566e408994062e, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3787793460065758250, guid: 4264bb7a26cb6914ea566e408994062e, type: 3}
+      propertyPath: m_SortingOrder
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4264bb7a26cb6914ea566e408994062e, type: 3}

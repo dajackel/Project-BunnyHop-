@@ -24,6 +24,7 @@ public class GameManager : MonoBehaviour//, IUnityAdsInitializationListener
 
     //Enemy prefab for random spawning
     [SerializeField] GameObject enemy;
+    private bool canSpawnEnemy = false;
 
     private GameObject[] currentLevelSections = new GameObject[5];
     private int newestLevel = 0;
@@ -53,6 +54,7 @@ public class GameManager : MonoBehaviour//, IUnityAdsInitializationListener
         UI.updateHighScore(HighScore);
         BLevelBound.transform.position = new Vector2(BLevelBound.transform.position.x, -8.4f);
         setGameState(GAME_STATE.GAME_RUNNING);
+        StartCoroutine(enemySpawnDelay());
     }
 
     // Update is called once per frame
@@ -123,7 +125,7 @@ public class GameManager : MonoBehaviour//, IUnityAdsInitializationListener
 
         //spawn enemies
         float spawnVal = Random.Range(1, 100);
-        if (spawnVal <= ENEMY_SPAWN_CHANCE)
+        if (canSpawnEnemy && spawnVal <= ENEMY_SPAWN_CHANCE)
         {
             //Enemy needs to spawn
             bool leftOrRightSide = (spawnVal % 2 == 0) ? true : false;
@@ -159,6 +161,12 @@ public class GameManager : MonoBehaviour//, IUnityAdsInitializationListener
         currentLevelSections[newestLevel] = newLevelSection;
         newestLevel = (newestLevel + 1 == currentLevelSections.GetUpperBound(0) + 1) ? 0 : newestLevel + 1;
         yield return null;
+    }
+
+    IEnumerator enemySpawnDelay()
+    {
+        yield return new WaitForSecondsRealtime(10);
+        canSpawnEnemy = true;
     }
     public void setGameState(GAME_STATE gs)
     {
