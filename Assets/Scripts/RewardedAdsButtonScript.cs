@@ -29,9 +29,9 @@ public class RewardedAdsButtonScript : MonoBehaviour, IUnityAdsListener
         Advertisement.AddListener(this);
         Debug.Log("adListener");
 #if UNITY_IOS
+        Advertisement.Initialize(myGameIdAndroid, testMode, true);
+        _adUnitId = _iOSAdUnitId;
         Debug.Log("adInitialize");
-	        Advertisement.Initialize(myGameIdIOS, testMode, true, this);
-	        myAdUnitId = _iOSAdUnitId;
 #else
         Advertisement.Initialize(myGameIdAndroid, testMode, true);
         _adUnitId = _androidAdUnitId;
