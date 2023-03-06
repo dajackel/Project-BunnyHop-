@@ -14,6 +14,7 @@ public class RewardedAdsButtonScript : MonoBehaviour, IUnityAdsLoadListener, IUn
     public string _AdStatus = "";
     public bool adStarted;
     public bool adCompleted;
+    private bool isPlayingAd = false;
     private bool testMode = false;
     private bool rewardGranted = false;
     Button adButton;
@@ -35,13 +36,15 @@ public class RewardedAdsButtonScript : MonoBehaviour, IUnityAdsLoadListener, IUn
         Advertisement.Initialize(myGameIdAndroid, testMode, this);
 #endif
         adButton.interactable = false;
-        PlayerScript player = GameObject.Find("Player").GetComponent<PlayerScript>();
     }
     public void playAd()
     {
 
         //load & play ad
+        if (isPlayingAd)
+            return;
         Debug.Log("show ad");
+        isPlayingAd = true;
         adButton.interactable = false;
         Advertisement.Show(_adUnitId, this);
     }
@@ -58,10 +61,10 @@ public class RewardedAdsButtonScript : MonoBehaviour, IUnityAdsLoadListener, IUn
     {
         Debug.Log("adReady");
         Debug.Log(placementId + " " + _adUnitId);
-        if (placementId == _adUnitId)
-        {
-            Advertisement.Show(_adUnitId);
-        }
+        //if (placementId == _adUnitId)
+        //{
+        //    Advertisement.Show(_adUnitId);
+        //}
     }
 
     public void OnUnityAdsAdLoaded(string placementId)

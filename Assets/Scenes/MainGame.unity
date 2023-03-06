@@ -2793,8 +2793,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29003559a47e9cb40aea993a69dea091, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _androidAdUnitId: Rewarded_Android
-  _iOSAdUnitId: Rewarded_iOS
   _adUnitId: 
   _AdStatus: 
   adStarted: 0

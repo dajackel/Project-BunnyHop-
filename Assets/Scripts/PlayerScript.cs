@@ -119,7 +119,7 @@ public class PlayerScript : MonoBehaviour
                 transform.position = Vector3.MoveTowards(transform.position, targetPos, speed * Time.deltaTime);
             }
         }
-        else if(Input.anyKey)
+        else if (Input.anyKey)
         {
             targetPos = new Vector3(transform.position.x, transform.position.y, transform.position.z);
             if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
@@ -156,6 +156,8 @@ public class PlayerScript : MonoBehaviour
     {
         if (Input.touchSupported)
         {
+            if (Input.touchCount <= 0)
+                return;
             Touch touch = Input.GetTouch(0);
             Vector3 targetPos = Camera.main.ScreenToWorldPoint(touch.position);
             float posDifference = targetPos.x - transform.position.x;
@@ -167,10 +169,10 @@ public class PlayerScript : MonoBehaviour
         else
         {
             if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
-                    spriteRenderer.flipX = false;
+                spriteRenderer.flipX = false;
 
             else if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
-                    spriteRenderer.flipX = true;
+                spriteRenderer.flipX = true;
         }
     }
 
