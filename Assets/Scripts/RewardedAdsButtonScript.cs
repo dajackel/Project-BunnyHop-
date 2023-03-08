@@ -39,11 +39,10 @@ public class RewardedAdsButtonScript : MonoBehaviour, IUnityAdsLoadListener, IUn
     }
     public void playAd()
     {
-
+        Debug.Log("play ad called");
         //load & play ad
         if (isPlayingAd)
             return;
-        Debug.Log("show ad");
         isPlayingAd = true;
         adButton.interactable = false;
         Advertisement.Show(_adUnitId, this);
@@ -73,6 +72,7 @@ public class RewardedAdsButtonScript : MonoBehaviour, IUnityAdsLoadListener, IUn
 
         if (_adUnitId.Equals(_adUnitId))
         {
+            Debug.Log("adunit was adunit");
             // Configure the button to call the ShowAd() method when clicked:
             adButton.onClick.AddListener(playAd);
             // Enable the button for users to click:
@@ -109,9 +109,17 @@ public class RewardedAdsButtonScript : MonoBehaviour, IUnityAdsLoadListener, IUn
         Debug.Log("Ad Completed: " + _adUnitId);
         if (adCompleted && !rewardGranted)
         {
+            Debug.Log("reward granted");
             rewardGranted = true;
             player.gainExtraLife();
             UpdateUI(player);
+        }
+        else if (showCompletionState == UnityAdsShowCompletionState.SKIPPED)
+        {
+            isPlayingAd = false;
+            Debug.Log("ad skipped");
+            adButton.onClick.RemoveListener(playAd);
+            LoadAd();
         }
     }
     public void OnDestroy()
