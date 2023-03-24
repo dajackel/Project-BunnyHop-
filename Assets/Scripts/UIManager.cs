@@ -29,11 +29,12 @@ public class UIManager : MonoBehaviour
     private float fadeDuration = 10f;
     private bool isFadeCompleted;
     private bool fadeInOut;
-    private bool haveWatchedAd = false;
+    private bool haveWatchedAd;
 
 
     private void Start()
     {
+        haveWatchedAd = false;
         SceneManager = GameObject.FindGameObjectWithTag("PreviousScene").GetComponent<SceneTrackingScript>();
         if (SceneManager.getPreviousScene() == "MainMenu")
         {

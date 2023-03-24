@@ -35,14 +35,15 @@ public class RewardedAdsButtonScript : MonoBehaviour, IUnityAdsLoadListener, IUn
         _adUnitId = _androidAdUnitId;
         Advertisement.Initialize(myGameIdAndroid, testMode, this);
 #endif
-        adButton.interactable = false;
+        if (!Advertisement.isInitialized)
+            adButton.interactable = false;
     }
     public void playAd()
     {
-        Debug.Log("play ad called");
         //load & play ad
         if (isPlayingAd)
             return;
+        Debug.Log("play ad called");
         isPlayingAd = true;
         adButton.interactable = false;
         Advertisement.Show(_adUnitId, this);
@@ -60,10 +61,6 @@ public class RewardedAdsButtonScript : MonoBehaviour, IUnityAdsLoadListener, IUn
     {
         Debug.Log("adReady");
         Debug.Log(placementId + " " + _adUnitId);
-        //if (placementId == _adUnitId)
-        //{
-        //    Advertisement.Show(_adUnitId);
-        //}
     }
 
     public void OnUnityAdsAdLoaded(string placementId)
@@ -72,7 +69,6 @@ public class RewardedAdsButtonScript : MonoBehaviour, IUnityAdsLoadListener, IUn
 
         if (_adUnitId.Equals(_adUnitId))
         {
-            Debug.Log("adunit was adunit");
             // Configure the button to call the ShowAd() method when clicked:
             adButton.onClick.AddListener(playAd);
             // Enable the button for users to click:
